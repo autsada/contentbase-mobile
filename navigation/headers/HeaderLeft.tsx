@@ -1,5 +1,9 @@
-import { Image, StyleSheet, Pressable } from 'react-native'
+import { StyleSheet, Pressable } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { useDrawerStatus } from '@react-navigation/drawer'
 
+import CloseIcon from '../../components/icons/CloseIcon'
+import { theme } from '../../styles/theme'
 import type { AppDrawerScreenProps } from '..'
 import type { MainTabScreenProps } from '../MainTab'
 
@@ -13,15 +17,18 @@ export default function HeaderLeft({ navigation }: Props) {
   const drawerNavigator =
     navigation.getParent() as AppDrawerScreenProps<'AppStack'>['navigation']
 
+  const status = useDrawerStatus()
+
   return (
     <Pressable
       style={styles.container}
       onPress={() => drawerNavigator.toggleDrawer()}
     >
-      <Image
-        source={require('../../assets/images/logo.png')}
-        style={styles.logo}
-      />
+      {status === 'closed' ? (
+        <Ionicons name='menu-outline' size={35} color={theme.colors.black} />
+      ) : (
+        <CloseIcon size={35} />
+      )}
     </Pressable>
   )
 }

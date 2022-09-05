@@ -30,6 +30,7 @@ export default function Navigation() {
   // Listen to user's auth state
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
+      console.log('user -->', user)
       if (user) {
         const claims = await user.getIdTokenResult()
         const token = await user.getIdToken()

@@ -7,8 +7,6 @@ if (process.env.APP_ENV === 'production') {
   apiEndpoint = ''
 }
 
-console.log('env -->', process.env.APP_ENV)
-
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'ContentBase',
