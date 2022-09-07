@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     borderRadius: 999,
     resizeMode: 'contain',
   },

@@ -71,11 +71,7 @@ export default function AuthModalScreen({ navigation, route }: Props) {
           <View style={styles.logoContainer}>
             <Image
               source={require('../../assets/images/logo.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                resizeMode: 'contain',
-              }}
+              style={styles.logo}
             />
           </View>
           <TextHeader3
@@ -205,6 +201,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     overflow: 'hidden',
     marginBottom: 10,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
   },
   actions: {
     marginTop: 40,

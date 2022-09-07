@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     paddingTop: 20,
-    marginBottom: 40,
+    marginBottom: 20,
   },
   logoContainer: {
     width: 100,
@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: '100%',
-    height: '100%',
+    width: 80,
+    height: 80,
     resizeMode: 'contain',
   },
 })
