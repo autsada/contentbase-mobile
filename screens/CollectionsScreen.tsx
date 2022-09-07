@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
 import SafeAreaContainer from '../components/shared/SafeAreaContainer'
@@ -6,7 +6,7 @@ import Container from '../components/shared/Container'
 import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
-import { useCreateProfile } from '../store/hooks/useCreateProfile'
+import { useCreateProfile } from '../hooks/useCreateProfile'
 import { checkProfileExist } from '../utils/helpers'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 

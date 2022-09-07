@@ -103,6 +103,7 @@ export default function CreateProfileModal({
     handleSubmit,
     handleReset,
     resetForm,
+    setErrors,
   }: FormikProps<{ handle: string }> = useFormik({
     initialValues: {
       handle: '',
@@ -157,9 +158,15 @@ export default function CreateProfileModal({
         navigation.goBack()
       }
     }
+    // Reset input value
     if (values.handle) {
       resetForm({ values: { handle: '' } })
     }
+    // Reset errors
+    if (errors.handle) {
+      setErrors({})
+    }
+    // Reset validate handle state
     if (typeof isHandleUnique === 'boolean') setIsHandleUnique(undefined)
     closeModal()
   }
@@ -413,7 +420,7 @@ export default function CreateProfileModal({
                 <TextInput
                   placeholder='Your handle*'
                   style={styles.input}
-                  autoFocus={true}
+                  // autoFocus={true}
                   onChangeText={handleChange('handle')}
                   onBlur={handleBlur('handle')}
                   value={values.handle}
@@ -552,7 +559,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   content: {
-    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -42,11 +42,11 @@ export default function Overlay({
         <Pressable style={styles.inner} onPress={onPressOverlay}>
           {withSpinner && <Spinner size='large' />}
 
-          <View style={[styles.infoContainer, infoContainerStyle]}>
-            {withInfo && (
+          {withInfo && (
+            <View style={[styles.infoContainer, infoContainerStyle]}>
               <TextBase style={[styles.info, infoStyle]}>{info}</TextBase>
-            )}
-          </View>
+            </View>
+          )}
         </Pressable>
       </SafeAreaContainer>
     </View>

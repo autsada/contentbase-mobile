@@ -6,7 +6,7 @@ import Container from '../components/shared/Container'
 import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
-import { useCreateProfile } from '../store/hooks/useCreateProfile'
+import { useCreateProfile } from '../hooks/useCreateProfile'
 import { checkProfileExist } from '../utils/helpers'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 

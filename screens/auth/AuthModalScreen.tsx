@@ -1,5 +1,6 @@
-import React from 'react'
-import { View, StyleSheet, Platform, Pressable } from 'react-native'
+import React, { useEffect } from 'react'
+import { View, StyleSheet, Platform, Pressable, Image } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 import {
   FontAwesome,
   Ionicons,
@@ -10,7 +11,7 @@ import {
 import SafeAreaContainer from '../../components/shared/SafeAreaContainer'
 import CloseButton from '../../components/shared/CloseButton'
 import RegularButton from '../../components/shared/RegularButton'
-import { TextBase, TextHeader3, TextLight } from '../../components/shared/Texts'
+import { TextHeader3, TextLight } from '../../components/shared/Texts'
 import type { AuthStackScreenProps } from './AuthStack'
 import { useAuth } from '../../store/hooks/useAuth'
 import { theme } from '../../styles/theme'
@@ -33,11 +34,22 @@ export default function AuthModalScreen({ navigation, route }: Props) {
   const { isAuthenticated } = useAuth()
   const params = route.params
 
+  const isFoucused = useIsFocused()
+
+  // When user is authenticatated and the screen is focused, pop the screen out
+  useEffect(() => {
+    if (isAuthenticated && isFoucused) {
+      navigation.pop()
+    }
+  }, [isAuthenticated, navigation, isFoucused])
+
   function closeModal() {
     if (!isAuthenticated) {
       navigation.navigate('MainTab', {
         screen: 'Home',
       })
+    } else {
+      navigation.pop()
     }
   }
 
@@ -55,16 +67,23 @@ export default function AuthModalScreen({ navigation, route }: Props) {
         <CloseButton size={30} />
       </Pressable>
       <View style={styles.content}>
-        <View style={styles.logoContainer}>
-          <View style={styles.logo}>
-            <TextBase>Logo</TextBase>
+        <View style={styles.brandContainer}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={{
+                width: 80,
+                // height: '100%',
+                resizeMode: 'contain',
+              }}
+            />
           </View>
           <TextHeader3
             style={{
-              letterSpacing: theme.spacing.xs,
+              letterSpacing: theme.spacing.xxs,
             }}
           >
-            SEVANA
+            CONTENT BASE
           </TextHeader3>
         </View>
 
@@ -174,10 +193,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
-  logoContainer: {
+  brandContainer: {
     alignItems: 'center',
   },
-  logo: {
+  logoContainer: {
     width: 130,
     height: 130,
     justifyContent: 'center',

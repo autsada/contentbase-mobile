@@ -31,19 +31,23 @@ export default function Navigation() {
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
       console.log('user -->', user)
-      if (user) {
-        const claims = await user.getIdTokenResult()
-        const token = await user.getIdToken()
-        setCredentials({
-          user,
-          token,
-          signInProvider: claims.signInProvider as any,
-        })
+      try {
+        if (user) {
+          const claims = await user.getIdTokenResult()
+          const token = await user.getIdToken()
+          setCredentials({
+            user,
+            token,
+            signInProvider: claims.signInProvider as any,
+          })
 
-        // Set header to the request client
-        client.setHeader('authorization', `Bearer ${token}`)
-      } else {
-        setCredentials({ user: null, token: null })
+          // Set header to the request client
+          client.setHeader('authorization', `Bearer ${token}`)
+        } else {
+          setCredentials({ user: null, token: null })
+        }
+      } catch (error) {
+        console.log('auth error: ', error)
       }
     })
 

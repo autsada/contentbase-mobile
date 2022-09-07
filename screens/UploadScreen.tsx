@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Text } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
@@ -7,7 +6,7 @@ import Container from '../components/shared/Container'
 import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
-import { useCreateProfile } from '../store/hooks/useCreateProfile'
+import { useCreateProfile } from '../hooks/useCreateProfile'
 import { checkProfileExist } from '../utils/helpers'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
@@ -24,7 +23,7 @@ export default function UploadScreen({ navigation }: Props) {
   )
 
   // Auth modal will be poped up if user is not authenticated
-  const authTitle = 'Sign in to share with the world'
+  const authTitle = 'Sign in to share your content'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
 
   return (

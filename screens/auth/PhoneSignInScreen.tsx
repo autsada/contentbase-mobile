@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { View, StyleSheet, TextInput, Pressable, Alert } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import * as Localization from 'expo-localization'
 import {
@@ -8,8 +9,6 @@ import {
   isValidPhoneNumber,
 } from 'libphonenumber-js/mobile'
 import auth from '@react-native-firebase/auth'
-import axios from 'axios'
-import Constants from 'expo-constants'
 
 import type { AuthStackScreenProps } from './AuthStack'
 import SafeAreaContainer from '../../components/shared/SafeAreaContainer'
@@ -21,6 +20,7 @@ import {
   TextBaseItalic,
 } from '../../components/shared/Texts'
 import RegularButton from '../../components/shared/RegularButton'
+import { useAuth } from '../../store/hooks/useAuth'
 import { useAuthStackContext } from './auth-stack-context'
 import { useAppOverlay } from '../../store/hooks/useOverlay'
 import { theme } from '../../styles/theme'
@@ -34,6 +34,7 @@ export default function PhoneSignInScreen({ navigation, route }: Props) {
   const [text, setText] = useState('')
   // const [isNumberValid, setIsNumberValid] = useState(false)
 
+  const { isAuthenticated } = useAuth()
   const {
     phoneNumber,
     setPhoneNumber,
@@ -46,6 +47,7 @@ export default function PhoneSignInScreen({ navigation, route }: Props) {
     setConfirmation,
   } = useAuthStackContext()
   const { applyOverlay } = useAppOverlay()
+  const isFocused = useIsFocused()
 
   // Get calling code from the default region
   useEffect(() => {
@@ -70,6 +72,13 @@ export default function PhoneSignInScreen({ navigation, route }: Props) {
       setPhoneNumber('')
     }
   }, [text, callingCode, countryCode])
+
+  // When user is authenticatated and the screen is focused, pop the screen out
+  useEffect(() => {
+    if (isAuthenticated && isFocused) {
+      navigation.pop()
+    }
+  }, [isAuthenticated, navigation, isFocused])
 
   function openCountryPicker() {
     navigation.navigate('CountryPicker')
@@ -99,7 +108,6 @@ export default function PhoneSignInScreen({ navigation, route }: Props) {
       applyOverlay(false)
       navigation.navigate('ConfirmCode')
     } catch (error) {
-      console.log('error 1 -->', error)
       applyOverlay(false)
       Alert.alert('', 'Something not right, please try again.')
     }
@@ -109,14 +117,6 @@ export default function PhoneSignInScreen({ navigation, route }: Props) {
     <SafeAreaContainer>
       <CustomKeyboardAvoidingView>
         <View style={styles.form}>
-          {/* <View style={styles.icon}>
-            <Ionicons
-              name='phone-portrait'
-              size={100}
-              color={theme.colors.secondaryText}
-            />
-          </View> */}
-
           <TextHeader5 style={styles.header}>
             Enter your Phone Number
           </TextHeader5>
