@@ -26,7 +26,7 @@ export default function MainDrawerContent(props: Props) {
 
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerHeader />
+      <DrawerHeader navigation={navigation} />
       <CustomDrawerItem
         label='Videos'
         icon={() => (
