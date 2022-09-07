@@ -72,8 +72,8 @@ export default function AuthModalScreen({ navigation, route }: Props) {
             <Image
               source={require('../../assets/images/logo.png')}
               style={{
-                width: 80,
-                // height: '100%',
+                width: '100%',
+                height: '100%',
                 resizeMode: 'contain',
               }}
             />
@@ -95,7 +95,7 @@ export default function AuthModalScreen({ navigation, route }: Props) {
             titleContainerStyle={styles.buttonTextContainer}
             containerStyle={{
               ...styles.button,
-              backgroundColor: theme.colors.blue,
+              backgroundColor: theme.colors.darkBlue,
               ...buttonShadow,
             }}
             icon={() => (
@@ -157,11 +157,11 @@ export default function AuthModalScreen({ navigation, route }: Props) {
             title='Connect with Wallet'
             titleStyle={styles.buttonText}
             titleContainerStyle={styles.buttonTextContainer}
-            containerStyle={{
-              ...styles.button,
-              backgroundColor: theme.colors.yellow,
-              ...buttonShadow,
-            }}
+            containerStyle={[
+              styles.button,
+              { backgroundColor: theme.colors.yellow },
+              buttonShadow,
+            ]}
             icon={() => (
               <View style={styles.buttonIcon}>
                 <SimpleLineIcons

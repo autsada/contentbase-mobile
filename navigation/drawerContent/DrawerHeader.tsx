@@ -17,17 +17,20 @@ export default function DrawerHeader({}: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 120,
-    paddingHorizontal: 20,
+    justifyContent: 'center',
+    paddingTop: 20,
+    marginBottom: 40,
   },
   logoContainer: {
-    width: '40%',
-    height: '100%',
+    width: 100,
+    height: 100,
+    borderRadius: 999,
+    overflow: 'hidden',
     alignSelf: 'center',
     alignItems: 'center',
   },
   logo: {
-    width: 60,
+    width: '100%',
     height: '100%',
     resizeMode: 'contain',
   },

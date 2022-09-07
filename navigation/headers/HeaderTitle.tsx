@@ -15,13 +15,13 @@ export default function HeaderTitle({}: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
   },
   logo: {
     width: 60,
+    height: 60,
+    borderRadius: 999,
     resizeMode: 'contain',
   },
 })

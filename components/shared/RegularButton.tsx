@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Pressable, View, Platform, ColorValue } from 'react-native'
-import type { ViewStyle, TextStyle, Insets } from 'react-native'
+import type { ViewStyle, TextStyle, Insets, StyleProp } from 'react-native'
 
 import Spinner from './Spinner'
 import { TextBase } from './Texts'
@@ -9,9 +9,9 @@ import { theme } from '../../styles/theme'
 
 interface Props {
   title: string
-  titleStyle?: TextStyle
-  titleContainerStyle?: ViewStyle
-  containerStyle?: ViewStyle
+  titleStyle?: StyleProp<TextStyle>
+  titleContainerStyle?: StyleProp<ViewStyle>
+  containerStyle?: StyleProp<ViewStyle>
   icon?: () => React.ReactNode
   onPress?: () => void
   disabled?: boolean

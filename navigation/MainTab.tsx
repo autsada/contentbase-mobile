@@ -74,7 +74,14 @@ export default function MainTab({}: Props) {
         headerTitleAlign: 'center',
         headerStyle: {
           backgroundColor: theme.colors.white,
-          height: OS === 'web' ? 60 : height > width ? 100 : 60,
+          height:
+            OS === 'web'
+              ? 60
+              : height > width
+              ? OS === 'android'
+                ? 100
+                : 120
+              : 60,
         },
         headerTitleContainerStyle: {
           alignSelf: OS === 'web' ? 'center' : undefined,
