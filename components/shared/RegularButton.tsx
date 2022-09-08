@@ -19,6 +19,7 @@ interface Props {
   loading?: boolean
   withSpinner?: boolean
   spinnerColor?: ColorValue
+  spinnerSize?: number | 'small' | 'large'
 }
 
 const OS = Platform.OS
@@ -35,6 +36,7 @@ export default function RegularButton({
   loading,
   withSpinner = false,
   spinnerColor,
+  spinnerSize,
 }: Props) {
   return (
     <Pressable
@@ -59,7 +61,7 @@ export default function RegularButton({
       {icon ? icon() : null}
       <View style={titleContainerStyle}>
         {withSpinner && loading ? (
-          <Spinner color={spinnerColor} />
+          <Spinner color={spinnerColor} size={spinnerSize} />
         ) : (
           <TextBase style={titleStyle}>{title}</TextBase>
         )}

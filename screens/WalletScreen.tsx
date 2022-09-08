@@ -1,43 +1,87 @@
-import { Text } from 'react-native'
+import { useState } from 'react'
+import { View, StyleSheet, Alert } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
 import SafeAreaContainer from '../components/shared/SafeAreaContainer'
 import Container from '../components/shared/Container'
-import CreateProfileModal from '../components/profile/CreateProfileModal'
+import { TextBase, TextHeader5 } from '../components/shared/Texts'
+import RegularButton from '../components/shared/RegularButton'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
-import { useCreateProfile } from '../hooks/useCreateProfile'
-import { checkProfileExist } from '../utils/helpers'
+import { createWallet } from '../graphql'
+import { theme } from '../styles/theme'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
 interface Props extends MainTabScreenProps<'Wallet'> {}
 
 export default function WalletScreen({ navigation }: Props) {
-  const { isAuthenticated, account } = useAuth()
-  // const hasProfile = checkProfileExist(account)
+  const [processing, setProcessing] = useState(false)
+
+  const { isAuthenticated, hasWallet } = useAuth()
   const focused = useIsFocused()
-  // const { showCreateProfileModal, closeCreateProfileModal } = useCreateProfile(
-  //   focused,
-  //   isAuthenticated,
-  //   hasProfile
-  // )
 
   // Auth modal will be poped up if user is not authenticated
   const authTitle = 'Sign in to view your wallet'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
 
+  async function handleCreateWallet() {
+    try {
+      setProcessing(true)
+      await createWallet()
+      setProcessing(false)
+    } catch (error) {
+      setProcessing(false)
+      Alert.alert(
+        'Create Wallet Failed',
+        'Error occurred while attempting to create wallet. Please try again.',
+        [{ text: 'CLOSE' }]
+      )
+    }
+  }
+
   return (
     <SafeAreaContainer>
       <Container>
-        <Text>Wallet Screen</Text>
+        {!hasWallet ? (
+          <View style={[styles.container, { justifyContent: 'center' }]}>
+            <TextHeader5
+              style={{ width: '60%', alignSelf: 'center', textAlign: 'center' }}
+            >
+              You don't have wallet yet, let's create one.
+            </TextHeader5>
+            <RegularButton
+              title='CREATE WALLET'
+              containerStyle={styles.button}
+              titleStyle={{ color: theme.colors.gray }}
+              withSpinner={true}
+              spinnerColor={theme.colors.darkBlue}
+              disabled={processing}
+              loading={processing}
+              onPress={handleCreateWallet}
+            />
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <TextBase>Wallet</TextBase>
+          </View>
+        )}
       </Container>
-
-      {/* <CreateProfileModal
-        navigation={navigation}
-        visible={showCreateProfileModal}
-        closeModal={closeCreateProfileModal}
-        title={`You need your first profile NFT to view wallet, let's create one`}
-      /> */}
     </SafeAreaContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    flex: 1,
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  button: {
+    marginTop: 20,
+    width: 180,
+    height: 50,
+    borderRadius: theme.radius['2xl'],
+    backgroundColor: theme.colors.yellow,
+  },
+})

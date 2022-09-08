@@ -67,7 +67,6 @@ export default function Navigation() {
     return unsubscribe
   }, [user])
 
-  console.log('account -->', account)
   return (
     <NavigationContainer>
       <MainDrawer.Navigator

@@ -112,5 +112,7 @@ export const theme = {
     md: 8,
     lg: 12,
     xl: 20,
+    '2xl': 40,
+    '3xl': 60,
   },
 } as const
