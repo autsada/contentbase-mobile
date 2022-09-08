@@ -21,7 +21,7 @@ export type AppStackParamList = {
 export type AppStackScreenProps<T extends keyof AppStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, T, 'AppStack'>,
-    DrawerScreenProps<AppDrawerParamList>
+    DrawerScreenProps<AppDrawerParamList, keyof AppDrawerParamList, 'AppDrawer'>
   >
 
 interface Props {}

@@ -34,8 +34,16 @@ export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<AuthStackParamList, T, 'AuthStack'>,
     CompositeScreenProps<
-      NativeStackScreenProps<AppStackParamList>,
-      DrawerScreenProps<AppDrawerParamList>
+      NativeStackScreenProps<
+        AppStackParamList,
+        keyof AppStackParamList,
+        'AppStack'
+      >,
+      DrawerScreenProps<
+        AppDrawerParamList,
+        keyof AppDrawerParamList,
+        'AppDrawer'
+      >
     >
   >
 

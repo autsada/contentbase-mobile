@@ -39,10 +39,18 @@ export type MainTabParamList = {
 
 export type MainTabScreenProps<T extends keyof MainTabParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<MainTabParamList, T>,
+    BottomTabScreenProps<MainTabParamList, T, 'MainTab'>,
     CompositeScreenProps<
-      NativeStackScreenProps<AppStackParamList>,
-      DrawerScreenProps<AppDrawerParamList>
+      NativeStackScreenProps<
+        AppStackParamList,
+        keyof AppStackParamList,
+        'AppStack'
+      >,
+      DrawerScreenProps<
+        AppDrawerParamList,
+        keyof AppDrawerParamList,
+        'AppDrawer'
+      >
     >
   >
 

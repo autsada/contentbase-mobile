@@ -24,10 +24,18 @@ export type MainStackScreenProps<T extends keyof MainStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<MainStackParamList, T, 'MainStack'>,
     CompositeScreenProps<
-      BottomTabScreenProps<MainTabParamList>,
+      BottomTabScreenProps<MainTabParamList, keyof MainTabParamList, 'MainTab'>,
       CompositeScreenProps<
-        NativeStackScreenProps<AppStackParamList>,
-        DrawerScreenProps<AppDrawerParamList>
+        NativeStackScreenProps<
+          AppStackParamList,
+          keyof AppStackParamList,
+          'AppStack'
+        >,
+        DrawerScreenProps<
+          AppDrawerParamList,
+          keyof AppDrawerParamList,
+          'AppDrawer'
+        >
       >
     >
   >

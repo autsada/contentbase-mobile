@@ -6,7 +6,7 @@ import { useRoutes } from '../../store/hooks/useRoutes'
 
 export default function StackHeaderLeft(
   props: MainTabScreenProps<
-    'Home' | 'Collections' | 'Upload' | 'Wallet' | 'Profile' | 'MainStack'
+    'Home' | 'Posts' | 'Upload' | 'Wallet' | 'Notifications' | 'MainStack'
   >
 ) {
   const navigation = props.navigation

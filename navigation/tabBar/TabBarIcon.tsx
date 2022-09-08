@@ -10,10 +10,10 @@ import type { MainTabScreenProps } from '../MainTab'
 import type { MainStackParamList } from '../MainStack'
 
 export const stackRoutes: (keyof MainStackParamList)[] = [
-  'Videos',
-  // 'Posts',
-  'Following',
+  'Profiles',
+  'Collections',
   'Bookmarks',
+  'Likes',
 ]
 
 interface Props
