@@ -5,11 +5,11 @@ import Container from '../components/shared/Container'
 
 interface Props {}
 
-export default function FollowingScreen({}: Props) {
+export default function LikesScreen({}: Props) {
   return (
     <SafeAreaContainer>
       <Container>
-        <Text>Following</Text>
+        <Text>Likes</Text>
       </Container>
     </SafeAreaContainer>
   )

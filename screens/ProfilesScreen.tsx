@@ -10,9 +10,9 @@ import { useCreateProfile } from '../hooks/useCreateProfile'
 import { checkProfileExist } from '../utils/helpers'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
-interface Props extends MainTabScreenProps<'Profile'> {}
+interface Props extends MainTabScreenProps<any> {}
 
-export default function ProfileScreen({ navigation }: Props) {
+export default function ProfilesScreen({ navigation }: Props) {
   const { isAuthenticated, account } = useAuth()
   // const hasProfile = checkProfileExist(account)
   const focused = useIsFocused()

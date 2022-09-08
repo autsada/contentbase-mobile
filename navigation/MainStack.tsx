@@ -7,16 +7,16 @@ import type { DrawerScreenProps } from '@react-navigation/drawer'
 import type { AppDrawerParamList } from '.'
 import type { AppStackParamList } from './AppStack'
 import type { MainTabParamList, MainTabScreenProps } from './MainTab'
-import VideosScreen from '../screens/VideosScreen'
-import PostsScreen from '../screens/PostsScreen'
-import FollowingScreen from '../screens/FollowingScreen'
+import ProfilesScreen from '../screens/ProfilesScreen'
+import CollectionsScreen from '../screens/CollectionsScreen'
+import LikesScreen from '../screens/LikesScreen'
 import BookmarksScreen from '../screens/BookmarksScreen'
 import { useRoutes } from '../store/hooks/useRoutes'
 
 export type MainStackParamList = {
-  Videos: undefined
-  Posts: undefined
-  Following: undefined
+  Profiles: undefined
+  Collections: undefined
+  Likes: undefined
   Bookmarks: undefined
 }
 
@@ -54,9 +54,9 @@ export default function MainStack({}: Props) {
         },
       })}
     >
-      <Stack.Screen name='Videos' component={VideosScreen} />
-      <Stack.Screen name='Posts' component={PostsScreen} />
-      <Stack.Screen name='Following' component={FollowingScreen} />
+      <Stack.Screen name='Profiles' component={ProfilesScreen} />
+      <Stack.Screen name='Collections' component={CollectionsScreen} />
+      <Stack.Screen name='Likes' component={LikesScreen} />
       <Stack.Screen name='Bookmarks' component={BookmarksScreen} />
     </Stack.Navigator>
   )

@@ -23,6 +23,7 @@ export default function CustomDrawerItem({ label, icon, onPress }: Props) {
       )}
       icon={icon}
       onPress={onPress}
+      activeBackgroundColor={theme.colors.lightBlue}
       pressColor={theme.colors.lightBlue}
     />
   )

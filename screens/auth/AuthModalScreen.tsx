@@ -15,7 +15,7 @@ import { TextHeader3, TextLight } from '../../components/shared/Texts'
 import type { AuthStackScreenProps } from './AuthStack'
 import { useAuth } from '../../store/hooks/useAuth'
 import { theme } from '../../styles/theme'
-import { generateBoxShadow } from '../../utils/helpers'
+import { generateBoxShadow, getBottomBarColor } from '../../utils/helpers'
 
 interface Props extends AuthStackScreenProps<'Auth'> {}
 
@@ -35,6 +35,23 @@ export default function AuthModalScreen({ navigation, route }: Props) {
   const params = route.params
 
   const isFoucused = useIsFocused()
+
+  // Android - change bottom bar color to be the same as background color
+  useEffect(() => {
+    if (OS === 'android') {
+      if (isFoucused) {
+        getBottomBarColor(theme.colors.transparentYellow, 'dark')
+      } else {
+        getBottomBarColor('#fff', 'dark')
+      }
+    }
+
+    return () => {
+      if (OS === 'android') {
+        getBottomBarColor('#fff', 'dark')
+      }
+    }
+  }, [isFoucused])
 
   // When user is authenticatated and the screen is focused, pop the screen out
   useEffect(() => {
@@ -74,13 +91,13 @@ export default function AuthModalScreen({ navigation, route }: Props) {
               style={styles.logo}
             />
           </View>
-          <TextHeader3
+          {/* <TextHeader3
             style={{
               letterSpacing: theme.spacing.xxs,
             }}
           >
             CONTENT BASE
-          </TextHeader3>
+          </TextHeader3> */}
         </View>
 
         <View style={styles.actions}>
@@ -151,7 +168,7 @@ export default function AuthModalScreen({ navigation, route }: Props) {
           </View>
           <RegularButton
             title='Connect with Wallet'
-            titleStyle={styles.buttonText}
+            titleStyle={[styles.buttonText, { color: theme.colors.gray }]}
             titleContainerStyle={styles.buttonTextContainer}
             containerStyle={[
               styles.button,
@@ -163,7 +180,7 @@ export default function AuthModalScreen({ navigation, route }: Props) {
                 <SimpleLineIcons
                   name='wallet'
                   size={18}
-                  color={theme.colors.black}
+                  color={theme.colors.gray}
                 />
               </View>
             )}

@@ -10,12 +10,14 @@ export function useAuth() {
   const token = useAppSelector((state) => state.auth.token)
   const signInProvider = useAppSelector((state) => state.auth.signInProvider)
   const account = useAppSelector((state) => state.auth.account)
-  const hasWallet = !!account && !!account.address && !!account.walletId
+  const hasProfile = account && account.profiles && account.profiles.length > 0
+  const hasWallet = account && account.address && !!account.walletId
   const loggedInProfile =
     account && account.profiles && account.profiles.length > 0
       ? account.profiles.find(
-          (profile) => profile.profileId === account.loggedInProfile
-        )
+          (profile) =>
+            profile.profileId === account.loggedInProfile || profile.isDefault
+        ) || account.profiles[0]
       : null
 
   const dispatch = useAppDispatch()
@@ -49,6 +51,7 @@ export function useAuth() {
       setUserProfile,
       loggedInProfile,
       hasWallet,
+      hasProfile,
     }),
     [
       user,
@@ -60,6 +63,7 @@ export function useAuth() {
       setUserProfile,
       loggedInProfile,
       hasWallet,
+      hasProfile,
     ]
   )
 }

@@ -25,7 +25,7 @@ export type AppDrawerScreenProps<T extends keyof AppDrawerParamList> =
 const MainDrawer = createDrawerNavigator<AppDrawerParamList>()
 
 export default function Navigation() {
-  const { user, setUserProfile, setCredentials, account } = useAuth()
+  const { user, setUserProfile, setCredentials } = useAuth()
 
   // Listen to user's auth state
   useEffect(() => {

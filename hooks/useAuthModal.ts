@@ -6,7 +6,7 @@ import type { AppStackScreenProps } from '../navigation/AppStack'
 export function useAuthModal(
   isAuthenticated: boolean,
   navigation: MainTabScreenProps<
-    'Home' | 'Collections' | 'Upload' | 'Profile' | 'Wallet' | 'MainStack'
+    'Home' | 'Posts' | 'Upload' | 'Notifications' | 'Wallet' | 'MainStack'
   >['navigation'],
   screenFocused: boolean,
   title: string

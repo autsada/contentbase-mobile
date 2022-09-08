@@ -1,11 +1,12 @@
+import { View, StyleSheet } from 'react-native'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import type { DrawerContentComponentProps } from '@react-navigation/drawer'
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons'
 
 import CustomDrawerItem from './CustomDrawerItem'
 import DrawerHeader from './DrawerHeader'
-import type { MainStackParamList } from '../MainStack'
 import { theme } from '../../styles/theme'
+import type { MainStackParamList } from '../MainStack'
 
 interface Props extends DrawerContentComponentProps {}
 
@@ -28,41 +29,60 @@ export default function MainDrawerContent(props: Props) {
     <DrawerContentScrollView {...props}>
       <DrawerHeader navigation={navigation} />
       <CustomDrawerItem
-        label='Videos'
+        label='Profiles'
         icon={() => (
-          <MaterialIcons
-            name='video-library'
-            size={24}
-            color={theme.colors.black}
-          />
+          <View style={styles.icon}>
+            <Ionicons
+              name='person-outline'
+              size={24}
+              color={theme.colors.black}
+            />
+          </View>
         )}
-        onPress={() => navigate('Videos')}
+        onPress={() => navigate('Profiles')}
       />
       <CustomDrawerItem
-        label='Posts'
+        label='Collections'
         icon={() => (
-          <MaterialCommunityIcons
-            name='post-outline'
-            size={24}
-            color={theme.colors.black}
-          />
+          <View style={styles.icon}>
+            <SimpleLineIcons
+              name='layers'
+              size={20}
+              color={theme.colors.black}
+            />
+          </View>
         )}
-        onPress={() => navigate('Posts')}
-      />
-      <CustomDrawerItem
-        label='Following'
-        icon={() => (
-          <MaterialIcons name='favorite' size={24} color={theme.colors.black} />
-        )}
-        onPress={() => navigate('Following')}
+        onPress={() => navigate('Collections')}
       />
       <CustomDrawerItem
         label='Bookmarks'
         icon={() => (
-          <MaterialIcons name='bookmark' size={24} color={theme.colors.black} />
+          <View style={styles.icon}>
+            <Ionicons
+              name='bookmark-outline'
+              size={24}
+              color={theme.colors.black}
+            />
+          </View>
         )}
         onPress={() => navigate('Bookmarks')}
+      />
+      <CustomDrawerItem
+        label='Likes'
+        icon={() => (
+          <View style={styles.icon}>
+            <SimpleLineIcons name='like' size={20} color={theme.colors.black} />
+          </View>
+        )}
+        onPress={() => navigate('Likes')}
       />
     </DrawerContentScrollView>
   )
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 30,
+    alignItems: 'center',
+  },
+})

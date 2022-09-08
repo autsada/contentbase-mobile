@@ -8,7 +8,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type { DrawerScreenProps } from '@react-navigation/drawer'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as NavigationBar from 'expo-navigation-bar'
 
 import type { AppStackParamList } from './AppStack'
 import HeaderLeft from './headers/HeaderLeft'
@@ -18,10 +17,10 @@ import TabBarIcon from './tabBar/TabBarIcon'
 import TabBarLabel from './tabBar/TabBarLabel'
 import { TextHeader4 } from '../components/shared/Texts'
 import HomeScreen from '../screens/HomeScreen'
-import CollectionsScreen from '../screens/CollectionsScreen'
+import PostsScreen from '../screens/PostsScreen'
 import UploadScreen from '../screens/UploadScreen'
 import WalletScreen from '../screens/WalletScreen'
-import ProfileScreen from '../screens/ProfileScreen'
+import NotificationsScreen from '../screens/NotificationsScreen'
 import MainStack from './MainStack'
 import type { MainStackParamList } from './MainStack'
 import type { AppDrawerParamList } from '.'
@@ -31,10 +30,10 @@ import { getBottomBarColor, getMainStackHeaderTitle } from '../utils/helpers'
 
 export type MainTabParamList = {
   Home: undefined
-  Collections: undefined
+  Posts: undefined
   Upload: undefined
   Wallet: undefined
-  Profile: undefined
+  Notifications: undefined
   MainStack: NavigatorScreenParams<MainStackParamList>
 }
 
@@ -93,10 +92,10 @@ export default function MainTab({}: Props) {
         screenOptions={(
           props: MainTabScreenProps<
             | 'Home'
-            | 'Collections'
+            | 'Posts'
             | 'Upload'
             | 'Wallet'
-            | 'Profile'
+            | 'Notifications'
             | 'MainStack'
           >
         ) => ({
@@ -126,8 +125,8 @@ export default function MainTab({}: Props) {
           })}
         />
         <Tab.Screen
-          name='Collections'
-          component={CollectionsScreen}
+          name='Posts'
+          component={PostsScreen}
           listeners={({ route }) => ({
             focus: () => {
               setActiveRoute(route.name)
@@ -150,8 +149,8 @@ export default function MainTab({}: Props) {
           })}
         />
         <Tab.Screen
-          name='Wallet'
-          component={WalletScreen}
+          name='Notifications'
+          component={NotificationsScreen}
           listeners={({ route }) => ({
             focus: () => {
               setActiveRoute(route.name)
@@ -162,8 +161,8 @@ export default function MainTab({}: Props) {
           })}
         />
         <Tab.Screen
-          name='Profile'
-          component={ProfileScreen}
+          name='Wallet'
+          component={WalletScreen}
           listeners={({ route }) => ({
             focus: () => {
               setActiveRoute(route.name)

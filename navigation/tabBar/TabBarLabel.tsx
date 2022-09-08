@@ -9,7 +9,7 @@ import { stackRoutes } from './TabBarIcon'
 
 interface Props
   extends MainTabScreenProps<
-    'Home' | 'Collections' | 'Upload' | 'Wallet' | 'Profile' | 'MainStack'
+    'Home' | 'Posts' | 'Upload' | 'Wallet' | 'Notifications' | 'MainStack'
   > {
   focused: boolean
   color: string
