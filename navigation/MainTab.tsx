@@ -79,8 +79,8 @@ export default function MainTab({}: Props) {
               ? 60
               : height > width
               ? OS === 'android'
-                ? 100
-                : 120
+                ? 90
+                : 110
               : 60,
         },
         headerTitleContainerStyle: {
