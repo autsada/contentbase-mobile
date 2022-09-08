@@ -14,16 +14,16 @@ interface Props extends MainTabScreenProps<'Profile'> {}
 
 export default function ProfileScreen({ navigation }: Props) {
   const { isAuthenticated, account } = useAuth()
-  const hasProfile = checkProfileExist(account)
+  // const hasProfile = checkProfileExist(account)
   const focused = useIsFocused()
-  const { showCreateProfileModal, closeCreateProfileModal } = useCreateProfile(
-    focused,
-    isAuthenticated,
-    hasProfile
-  )
+  // const { showCreateProfileModal, closeCreateProfileModal } = useCreateProfile(
+  //   focused,
+  //   isAuthenticated,
+  //   hasProfile
+  // )
 
   // Auth modal will be poped up if user is not authenticated
-  const authTitle = 'Sign in to access your profile'
+  const authTitle = 'Sign in to view your profiles'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
 
   return (
@@ -32,12 +32,12 @@ export default function ProfileScreen({ navigation }: Props) {
         <Text>Profile!!!</Text>
       </Container>
 
-      <CreateProfileModal
+      {/* <CreateProfileModal
         navigation={navigation}
         visible={showCreateProfileModal}
         closeModal={closeCreateProfileModal}
         title={`You need your first profile NFT to view your profile, let's create one`}
-      />
+      /> */}
     </SafeAreaContainer>
   )
 }

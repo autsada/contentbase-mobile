@@ -10,11 +10,13 @@ export function useAuth() {
   const token = useAppSelector((state) => state.auth.token)
   const signInProvider = useAppSelector((state) => state.auth.signInProvider)
   const account = useAppSelector((state) => state.auth.account)
-  const loggedInProfile = account
-    ? account.profiles.find(
-        (profile) => profile.profileId === account.loggedInProfile
-      )
-    : null
+  const hasWallet = !!account && !!account.address && !!account.walletId
+  const loggedInProfile =
+    account && account.profiles && account.profiles.length > 0
+      ? account.profiles.find(
+          (profile) => profile.profileId === account.loggedInProfile
+        )
+      : null
 
   const dispatch = useAppDispatch()
 
@@ -46,6 +48,7 @@ export function useAuth() {
       setCredentials,
       setUserProfile,
       loggedInProfile,
+      hasWallet,
     }),
     [
       user,
@@ -56,6 +59,7 @@ export function useAuth() {
       setCredentials,
       setUserProfile,
       loggedInProfile,
+      hasWallet,
     ]
   )
 }

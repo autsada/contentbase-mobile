@@ -37,27 +37,28 @@ import TrashIcon from '../icons/TrashIcon'
 import ErrorMessage from '../shared/ErrorMessage'
 import CheckIcon from '../icons/CheckIcon'
 import { useLinking } from '../../hooks/useLinking'
-import {
-  client,
-  VALIDATE_HANDLE_QUERY,
-  CREATE_PROFILE_NFT_MUTATION,
-} from '../../graphql'
+// import {
+//   client,
+//   VALIDATE_HANDLE_QUERY,
+//   CREATE_PROFILE_NFT_MUTATION,
+// } from '../../graphql'
 import { useAuth } from '../../store/hooks/useAuth'
+import { createProfileNft, verifyHandle } from '../../graphql'
 import { takeProfileImage, pickProfileImage } from '../../utils/media'
-import { theme } from '../../styles/theme'
 import {
   getBottomBarColor,
   generateBoxShadow,
   checkProfileExist,
 } from '../../utils/helpers'
+import { theme } from '../../styles/theme'
 import type { MainTabScreenProps } from '../../navigation/MainTab'
 
-import type {
-  QueryReturnType,
-  QueryArgsType,
-  MutationReturnType,
-  MutationArgsType,
-} from '../../graphql/types'
+// import type {
+//   QueryReturnType,
+//   QueryArgsType,
+//   MutationReturnType,
+//   MutationArgsType,
+// } from '../../graphql/types'
 
 interface Props {
   visible: boolean
@@ -115,7 +116,7 @@ export default function CreateProfileModal({
         .max(25, 'Maximum 25 characters.')
         .required('You need to specify your handle.'),
     }),
-    onSubmit: createProfileNft,
+    onSubmit: handleCreateProfile,
   })
 
   // Get navigation bar color
@@ -148,7 +149,7 @@ export default function CreateProfileModal({
   // Verify handle when user types
   useEffect(() => {
     if (values.handle) {
-      verifyHandleDebounce(values.handle)
+      validateHandleDebounce(values.handle)
     }
   }, [values.handle])
 
@@ -317,18 +318,15 @@ export default function CreateProfileModal({
     }
   }
 
-  const verifyHandleDebounce = useCallback(_.debounce(verifyHandle, 400), [
+  const validateHandleDebounce = useCallback(_.debounce(validateHandle, 400), [
     values.handle,
   ])
 
-  async function verifyHandle(handle: string) {
+  async function validateHandle(handle: string) {
     try {
       if (handle && handle.length < 3) return
 
-      const data = await client.request<
-        QueryReturnType<'isHandleUnique'>,
-        QueryArgsType<'isHandleUnique'>
-      >(VALIDATE_HANDLE_QUERY, { handle })
+      const data = await verifyHandle(handle)
 
       setIsHandleUnique(data.isHandleUnique)
     } catch (error) {
@@ -340,7 +338,7 @@ export default function CreateProfileModal({
    * @dev If user signs in with wallet, connect to blockchain directly
    * If user signs in with phone/email/google, connect to the server
    */
-  async function createProfileNft(values: { handle: string }) {
+  async function handleCreateProfile(values: { handle: string }) {
     try {
       if (signInProvider === 'custom') {
         // User signs in with wallet
@@ -352,12 +350,13 @@ export default function CreateProfileModal({
         if (selectedImage) {
         }
 
-        const data = await client.request<
-          MutationReturnType<'createProfileNft'>,
-          MutationArgsType<'createProfileNft'>
-        >(CREATE_PROFILE_NFT_MUTATION, {
-          input: { handle: values.handle, imageURI: '' },
-        })
+        // const data = await client.request<
+        //   MutationReturnType<'createProfileNft'>,
+        //   MutationArgsType<'createProfileNft'>
+        // >(CREATE_PROFILE_NFT_MUTATION, {
+        //   input: { handle: values.handle, imageURI: '' },
+        // })
+        await createProfileNft({ handle: values.handle, imageURI: '' })
 
         setProcessing(false)
         Alert.alert(
@@ -378,6 +377,7 @@ export default function CreateProfileModal({
         )
       }
     } catch (error) {
+      console.log('error -->', error)
       setProcessing(false)
       Alert.alert(
         '',

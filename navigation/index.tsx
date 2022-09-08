@@ -25,12 +25,11 @@ export type AppDrawerScreenProps<T extends keyof AppDrawerParamList> =
 const MainDrawer = createDrawerNavigator<AppDrawerParamList>()
 
 export default function Navigation() {
-  const { user, setUserProfile, setCredentials } = useAuth()
+  const { user, setUserProfile, setCredentials, account } = useAuth()
 
   // Listen to user's auth state
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
-      console.log('user -->', user)
       try {
         if (user) {
           const claims = await user.getIdTokenResult()
@@ -68,6 +67,7 @@ export default function Navigation() {
     return unsubscribe
   }, [user])
 
+  console.log('account -->', account)
   return (
     <NavigationContainer>
       <MainDrawer.Navigator

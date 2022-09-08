@@ -14,16 +14,16 @@ interface Props extends MainTabScreenProps<'Wallet'> {}
 
 export default function WalletScreen({ navigation }: Props) {
   const { isAuthenticated, account } = useAuth()
-  const hasProfile = checkProfileExist(account)
+  // const hasProfile = checkProfileExist(account)
   const focused = useIsFocused()
-  const { showCreateProfileModal, closeCreateProfileModal } = useCreateProfile(
-    focused,
-    isAuthenticated,
-    hasProfile
-  )
+  // const { showCreateProfileModal, closeCreateProfileModal } = useCreateProfile(
+  //   focused,
+  //   isAuthenticated,
+  //   hasProfile
+  // )
 
   // Auth modal will be poped up if user is not authenticated
-  const authTitle = 'Sign in to access your wallet'
+  const authTitle = 'Sign in to view your wallet'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
 
   return (
@@ -32,12 +32,12 @@ export default function WalletScreen({ navigation }: Props) {
         <Text>Wallet Screen</Text>
       </Container>
 
-      <CreateProfileModal
+      {/* <CreateProfileModal
         navigation={navigation}
         visible={showCreateProfileModal}
         closeModal={closeCreateProfileModal}
         title={`You need your first profile NFT to view wallet, let's create one`}
-      />
+      /> */}
     </SafeAreaContainer>
   )
 }

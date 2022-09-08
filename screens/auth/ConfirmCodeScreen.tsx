@@ -12,14 +12,12 @@ import SafeAreaContainer from '../../components/shared/SafeAreaContainer'
 import CustomKeyboardAvoidingView from '../../components/shared/CustomKeyboardAvoidingView'
 import { TextHeader5, TextLight, TextBase } from '../../components/shared/Texts'
 import RegularButton from '../../components/shared/RegularButton'
-import CreateProfileModal from '../../components/profile/CreateProfileModal'
 import { useAuthStackContext } from './auth-stack-context'
 import { useAppOverlay } from '../../store/hooks/useOverlay'
 import { useAuth } from '../../store/hooks/useAuth'
-import { checkProfileExist } from '../../utils/helpers'
+import { createWallet } from '../../graphql'
 import { theme } from '../../styles/theme'
 import type { AuthStackScreenProps } from './AuthStack'
-import type { AppStackScreenProps } from '../../navigation/AppStack'
 
 interface Props extends AuthStackScreenProps<'ConfirmCode'> {}
 
@@ -27,7 +25,6 @@ const CELL_COUNT = 6
 
 export default function ConfirmCodeScreen({ navigation }: Props) {
   const [code, setCode] = useState('')
-  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false)
 
   const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT })
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -35,8 +32,7 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
     setValue: setCode,
   })
 
-  const { isAuthenticated, account } = useAuth()
-  const hasProfile = checkProfileExist(account)
+  const { isAuthenticated, hasWallet } = useAuth()
   const { phoneNumber, isPhoneValid, confirmation, setConfirmation } =
     useAuthStackContext()
   const { applyOverlay } = useAppOverlay()
@@ -50,18 +46,24 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
     }
   }, [code])
 
-  // When user is authenticatated
+  // When user is authenticated and they don't have an account and wallet yet, create a new account and a wallet
   useEffect(() => {
-    if (isAuthenticated) {
-      if (!hasProfile) {
-        // If they don't have any profile yet, show create profile modal
-        setShowCreateProfileModal(true)
-      } else {
-        // Otherwise pop the screen out
+    if (isAuthenticated && !hasWallet) {
+      const createEthWallet = async () => {
+        try {
+          await createWallet()
+          applyOverlay(false)
+        } catch (error) {
+          console.log('create wallet error: ', error)
+        }
+
+        // Go to the first screen of the stack once done
         navigation.popToTop()
       }
+
+      createEthWallet()
     }
-  }, [isAuthenticated, hasProfile, navigation])
+  }, [isAuthenticated, hasWallet, navigation])
 
   /** This is the second step */
   async function confirmCode() {
@@ -69,9 +71,9 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
       if (!code || !confirmation) return
 
       applyOverlay(true)
-      const credentials = await confirmation.confirm(code)
 
-      applyOverlay(false)
+      // Confirm the code
+      await confirmation.confirm(code)
     } catch (error) {
       applyOverlay(false)
       Alert.alert('Invalid Code')
@@ -94,24 +96,24 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
   }
 
   /** Function to close create profile modal */
-  function closeCreateProfileModal() {
-    const appStackNavigator = navigation?.getParent() as AppStackScreenProps<
-      'AuthStack' | 'MainTab'
-    >['navigation']
+  // function closeCreateProfileModal() {
+  //   const appStackNavigator = navigation?.getParent() as AppStackScreenProps<
+  //     'AuthStack' | 'MainTab'
+  //   >['navigation']
 
-    if (showCreateProfileModal) setShowCreateProfileModal(false)
-    if (appStackNavigator) {
-      if (!hasProfile) {
-        // No profile created yet, bring user to home
-        appStackNavigator.navigate('MainTab', {
-          screen: 'Home',
-        })
-      } else {
-        // Just go back to previous screen
-        navigation.goBack()
-      }
-    }
-  }
+  //   if (showCreateProfileModal) setShowCreateProfileModal(false)
+  //   if (appStackNavigator) {
+  //     if (!hasProfile) {
+  //       // No profile created yet, bring user to home
+  //       appStackNavigator.navigate('MainTab', {
+  //         screen: 'Home',
+  //       })
+  //     } else {
+  //       // Just go back to previous screen
+  //       navigation.goBack()
+  //     }
+  //   }
+  // }
 
   return (
     <SafeAreaContainer>
@@ -177,13 +179,6 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
           )}
         </View>
       </CustomKeyboardAvoidingView>
-
-      <CreateProfileModal
-        navigation={navigation.getParent()}
-        visible={showCreateProfileModal}
-        closeModal={closeCreateProfileModal}
-        title={`Let's create your first profile`}
-      />
     </SafeAreaContainer>
   )
 }
