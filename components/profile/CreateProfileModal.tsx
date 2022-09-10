@@ -40,7 +40,7 @@ import { useLinking } from '../../hooks/useLinking'
 import { useAuth } from '../../store/hooks/useAuth'
 import { createProfileNft, verifyHandle } from '../../graphql'
 import { takeProfileImage, pickProfileImage } from '../../utils/media'
-import { generateBoxShadow } from '../../utils/helpers'
+import { generateBoxShadow, getBottomBarColor } from '../../utils/helpers'
 import { theme } from '../../styles/theme'
 
 interface Props {
@@ -95,6 +95,23 @@ export default function CreateProfileModal({
     }),
     onSubmit: handleCreateProfile,
   })
+
+  // Android- change navigation bar color
+  useEffect(() => {
+    if (OS === 'android') {
+      if (visible) {
+        getBottomBarColor(theme.colors.transparentBlack, 'light')
+      } else {
+        getBottomBarColor('#fff', 'dark')
+      }
+    }
+
+    return () => {
+      if (OS === 'android') {
+        getBottomBarColor('#fff', 'dark')
+      }
+    }
+  }, [visible])
 
   // Clean up temp images
   useEffect(() => {
@@ -321,8 +338,8 @@ export default function CreateProfileModal({
     } catch (error) {
       setProcessing(false)
       Alert.alert(
-        '',
-        'Error occurred while attempting to create profile NFT. Please try again.',
+        'Create Profile Failed',
+        'Please make sure you have some ethers in your wallet to pay gas fee (at least 0.0000000000003 ETH).',
         [{ text: 'CLOSE' }]
       )
     }

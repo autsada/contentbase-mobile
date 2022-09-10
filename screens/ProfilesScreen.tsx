@@ -22,16 +22,18 @@ export default function ProfilesScreen({ navigation }: Props) {
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
 
   return (
-    <SafeAreaContainer>
-      <Container>
-        <Text>Profile!!!</Text>
-      </Container>
+    <>
+      <SafeAreaContainer>
+        <Container>
+          <Text>Profile!!!</Text>
+        </Container>
+      </SafeAreaContainer>
 
       <CreateProfileModal
         visible={showProfileModal}
         closeModal={closeCreateProfileModal}
         title={title}
       />
-    </SafeAreaContainer>
+    </>
   )
 }

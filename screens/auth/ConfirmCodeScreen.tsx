@@ -53,12 +53,29 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
         try {
           await createWallet()
           applyOverlay(false)
+          // Go to the first screen of the stack once done
+          if (navigation.canGoBack) {
+            navigation.goBack()
+          }
         } catch (error) {
-          console.log('create wallet error: ', error)
-        }
+          applyOverlay(false)
+          Alert.alert(
+            '',
+            'We were trying to create a wallet for you but failed, please go to profiles screen and manually create wallet as you will need it later.',
+            [
+              {
+                text: 'CLOSE',
+                onPress: () => {
+                  if (navigation.canGoBack) {
+                    navigation.goBack()
+                  }
+                },
+              },
+            ]
+          )
 
-        // Go to the first screen of the stack once done
-        navigation.popToTop()
+          // TODO: create createWallet function on profiles screen for use as manual create if auto create failed
+        }
       }
 
       createEthWallet()
@@ -94,26 +111,6 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
       Alert.alert('', 'Something not right, please try again.')
     }
   }
-
-  /** Function to close create profile modal */
-  // function closeCreateProfileModal() {
-  //   const appStackNavigator = navigation?.getParent() as AppStackScreenProps<
-  //     'AuthStack' | 'MainTab'
-  //   >['navigation']
-
-  //   if (showCreateProfileModal) setShowCreateProfileModal(false)
-  //   if (appStackNavigator) {
-  //     if (!hasProfile) {
-  //       // No profile created yet, bring user to home
-  //       appStackNavigator.navigate('MainTab', {
-  //         screen: 'Home',
-  //       })
-  //     } else {
-  //       // Just go back to previous screen
-  //       navigation.goBack()
-  //     }
-  //   }
-  // }
 
   return (
     <SafeAreaContainer>
