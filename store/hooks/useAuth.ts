@@ -37,11 +37,7 @@ export function useAuth() {
   }
 
   function setUserAccount(account: AuthState['account']) {
-    dispatch(
-      setAccount({
-        account: { ...account, walletId: '' },
-      })
-    )
+    dispatch(setAccount({ account }))
   }
 
   return useMemo(
