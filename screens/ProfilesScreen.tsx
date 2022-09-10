@@ -6,21 +6,16 @@ import Container from '../components/shared/Container'
 import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
-import { useCreateProfile } from '../hooks/useCreateProfile'
-import { checkProfileExist } from '../utils/helpers'
+import { useCreateProfileModal } from '../store/hooks/useCreateProfileModal'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
 interface Props extends MainTabScreenProps<any> {}
 
 export default function ProfilesScreen({ navigation }: Props) {
-  const { isAuthenticated, account } = useAuth()
-  // const hasProfile = checkProfileExist(account)
+  const { isAuthenticated } = useAuth()
   const focused = useIsFocused()
-  // const { showCreateProfileModal, closeCreateProfileModal } = useCreateProfile(
-  //   focused,
-  //   isAuthenticated,
-  //   hasProfile
-  // )
+  const { showProfileModal, title, closeCreateProfileModal } =
+    useCreateProfileModal()
 
   // Auth modal will be poped up if user is not authenticated
   const authTitle = 'Sign in to view your profiles'
@@ -32,12 +27,11 @@ export default function ProfilesScreen({ navigation }: Props) {
         <Text>Profile!!!</Text>
       </Container>
 
-      {/* <CreateProfileModal
-        navigation={navigation}
-        visible={showCreateProfileModal}
+      <CreateProfileModal
+        visible={showProfileModal}
         closeModal={closeCreateProfileModal}
-        title={`You need your first profile NFT to view your profile, let's create one`}
-      /> */}
+        title={title}
+      />
     </SafeAreaContainer>
   )
 }

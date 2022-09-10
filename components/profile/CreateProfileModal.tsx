@@ -37,36 +37,16 @@ import TrashIcon from '../icons/TrashIcon'
 import ErrorMessage from '../shared/ErrorMessage'
 import CheckIcon from '../icons/CheckIcon'
 import { useLinking } from '../../hooks/useLinking'
-// import {
-//   client,
-//   VALIDATE_HANDLE_QUERY,
-//   CREATE_PROFILE_NFT_MUTATION,
-// } from '../../graphql'
 import { useAuth } from '../../store/hooks/useAuth'
 import { createProfileNft, verifyHandle } from '../../graphql'
 import { takeProfileImage, pickProfileImage } from '../../utils/media'
-import {
-  getBottomBarColor,
-  generateBoxShadow,
-  checkProfileExist,
-} from '../../utils/helpers'
+import { generateBoxShadow } from '../../utils/helpers'
 import { theme } from '../../styles/theme'
-import type { MainTabScreenProps } from '../../navigation/MainTab'
-
-// import type {
-//   QueryReturnType,
-//   QueryArgsType,
-//   MutationReturnType,
-//   MutationArgsType,
-// } from '../../graphql/types'
 
 interface Props {
   visible: boolean
   title?: string
   closeModal: () => void
-  navigation: MainTabScreenProps<
-    'Collections' | 'Upload' | 'Wallet' | 'Profile'
-  >['navigation']
 }
 
 const OS = Platform.OS
@@ -81,7 +61,6 @@ const uploadActionShadow = generateBoxShadow({
 })
 
 export default function CreateProfileModal({
-  navigation,
   visible,
   closeModal,
   title = 'Create New Profile',
@@ -91,8 +70,7 @@ export default function CreateProfileModal({
   const [isHandleUnique, setIsHandleUnique] = useState<boolean>()
   const [processing, setProcessing] = useState(false)
 
-  const { signInProvider, account } = useAuth()
-  const hasProfile = checkProfileExist(account)
+  const { signInProvider } = useAuth()
   const fadeAnim = useRef(new Animated.Value(0)).current
   const { openSettings } = useLinking()
   const {
@@ -102,7 +80,6 @@ export default function CreateProfileModal({
     errors,
     touched,
     handleSubmit,
-    handleReset,
     resetForm,
     setErrors,
   }: FormikProps<{ handle: string }> = useFormik({
@@ -118,23 +95,6 @@ export default function CreateProfileModal({
     }),
     onSubmit: handleCreateProfile,
   })
-
-  // Get navigation bar color
-  useEffect(() => {
-    if (OS === 'android') {
-      if (visible) {
-        getBottomBarColor('#000', 'light')
-      } else {
-        getBottomBarColor('#fff', 'dark')
-      }
-    }
-
-    return () => {
-      if (OS === 'android') {
-        getBottomBarColor('#fff', 'dark')
-      }
-    }
-  }, [visible])
 
   // Clean up temp images
   useEffect(() => {
@@ -154,11 +114,6 @@ export default function CreateProfileModal({
   }, [values.handle])
 
   function handleCloseModal() {
-    if (!hasProfile) {
-      if (navigation) {
-        navigation.goBack()
-      }
-    }
     // Reset input value
     if (values.handle) {
       resetForm({ values: { handle: '' } })
@@ -326,9 +281,8 @@ export default function CreateProfileModal({
     try {
       if (handle && handle.length < 3) return
 
-      const data = await verifyHandle(handle)
-
-      setIsHandleUnique(data.isHandleUnique)
+      const isUnique = await verifyHandle(handle)
+      setIsHandleUnique(isUnique)
     } catch (error) {
       console.log('verify handle error: ', error)
     }
@@ -350,12 +304,6 @@ export default function CreateProfileModal({
         if (selectedImage) {
         }
 
-        // const data = await client.request<
-        //   MutationReturnType<'createProfileNft'>,
-        //   MutationArgsType<'createProfileNft'>
-        // >(CREATE_PROFILE_NFT_MUTATION, {
-        //   input: { handle: values.handle, imageURI: '' },
-        // })
         await createProfileNft({ handle: values.handle, imageURI: '' })
 
         setProcessing(false)
@@ -365,19 +313,12 @@ export default function CreateProfileModal({
           [
             {
               text: 'CLOSE',
-              onPress: () => {
-                resetForm({ values: { handle: '' } })
-                if (typeof isHandleUnique === 'boolean') {
-                  setIsHandleUnique(undefined)
-                }
-                closeModal()
-              },
+              onPress: handleCloseModal,
             },
           ]
         )
       }
     } catch (error) {
-      console.log('error -->', error)
       setProcessing(false)
       Alert.alert(
         '',

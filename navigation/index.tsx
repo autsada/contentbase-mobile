@@ -25,7 +25,7 @@ export type AppDrawerScreenProps<T extends keyof AppDrawerParamList> =
 const MainDrawer = createDrawerNavigator<AppDrawerParamList>()
 
 export default function Navigation() {
-  const { user, setUserProfile, setCredentials } = useAuth()
+  const { user, setUserAccount, setCredentials } = useAuth()
 
   // Listen to user's auth state
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function Navigation() {
     const unsubscribe = listenToDocUpdate<NexusGenObjects['Account'] | null>({
       collectionName: accountsCollection,
       docId: user.uid,
-      setterFn: setUserProfile,
+      setterFn: setUserAccount,
       initialState: null,
     })
 

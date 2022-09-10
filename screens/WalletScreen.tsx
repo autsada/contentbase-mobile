@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 
 import SafeAreaContainer from '../components/shared/SafeAreaContainer'
 import Container from '../components/shared/Container'
-import { TextBase, TextHeader5 } from '../components/shared/Texts'
+import { TextHeader5 } from '../components/shared/Texts'
 import RegularButton from '../components/shared/RegularButton'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
@@ -17,7 +17,7 @@ interface Props extends MainTabScreenProps<'Wallet'> {}
 export default function WalletScreen({ navigation }: Props) {
   const [processing, setProcessing] = useState(false)
 
-  const { isAuthenticated, hasWallet } = useAuth()
+  const { isAuthenticated, hasWallet, account } = useAuth()
   const focused = useIsFocused()
 
   // Auth modal will be poped up if user is not authenticated
@@ -61,8 +61,12 @@ export default function WalletScreen({ navigation }: Props) {
             />
           </View>
         ) : (
-          <View style={styles.container}>
-            <TextBase>Wallet</TextBase>
+          <View style={[styles.container, { paddingHorizontal: 20 }]}>
+            <View style={styles.addressContainer}>
+              <TextHeader5 style={styles.address}>
+                {account.address}
+              </TextHeader5>
+            </View>
           </View>
         )}
       </Container>
@@ -83,5 +87,14 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: theme.radius['2xl'],
     backgroundColor: theme.colors.yellow,
+  },
+  addressContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: theme.radius.xl,
+    backgroundColor: theme.colors.veryLightGray,
+  },
+  address: {
+    fontSize: theme.fontSize.xs,
   },
 })

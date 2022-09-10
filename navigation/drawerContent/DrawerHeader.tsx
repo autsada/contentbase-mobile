@@ -5,6 +5,7 @@ import CloseIcon from '../../components/icons/CloseIcon'
 import { TextLight, TextHeader5 } from '../../components/shared/Texts'
 import RegularButton from '../../components/shared/RegularButton'
 import { useAuth } from '../../store/hooks/useAuth'
+import { useCreateProfileModal } from '../../store/hooks/useCreateProfileModal'
 import { theme } from './../../styles/theme'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -16,6 +17,23 @@ const OS = Platform.OS
 
 export default function DrawerHeader({ navigation }: Props) {
   const { isAuthenticated, hasProfile, loggedInProfile } = useAuth()
+  const { openCreateProfileModal } = useCreateProfileModal()
+
+  function onRequestToCreateProfile() {
+    if (!navigation) return
+    // set profile modal state to show with the title
+    openCreateProfileModal('Create My First Profile')
+    // Navigate to profile screen
+    navigation.navigate('AppStack', {
+      screen: 'MainTab',
+      params: {
+        screen: 'MainStack',
+        params: {
+          screen: 'Profile',
+        },
+      },
+    })
+  }
 
   if (!isAuthenticated) return null
 
@@ -55,6 +73,7 @@ export default function DrawerHeader({ navigation }: Props) {
           title='Create Profile'
           containerStyle={styles.button}
           titleStyle={{ color: theme.colors.gray }}
+          onPress={onRequestToCreateProfile}
         />
       )}
 

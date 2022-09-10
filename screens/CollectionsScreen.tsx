@@ -15,5 +15,3 @@ export default function CollectionsScreen({ navigation }: Props) {
     </SafeAreaContainer>
   )
 }
-
-const styles = StyleSheet.create({})

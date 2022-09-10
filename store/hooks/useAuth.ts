@@ -11,7 +11,7 @@ export function useAuth() {
   const signInProvider = useAppSelector((state) => state.auth.signInProvider)
   const account = useAppSelector((state) => state.auth.account)
   const hasProfile = account && account.profiles && account.profiles.length > 0
-  const hasWallet = account && account.address && !!account.walletId
+  const hasWallet = account && !!account.address
   const loggedInProfile =
     account && account.profiles && account.profiles.length > 0
       ? account.profiles.find(
@@ -36,8 +36,12 @@ export function useAuth() {
     )
   }
 
-  function setUserProfile(account: AuthState['account']) {
-    dispatch(setAccount({ account }))
+  function setUserAccount(account: AuthState['account']) {
+    dispatch(
+      setAccount({
+        account: { ...account, walletId: '' },
+      })
+    )
   }
 
   return useMemo(
@@ -48,7 +52,7 @@ export function useAuth() {
       signInProvider,
       account,
       setCredentials,
-      setUserProfile,
+      setUserAccount,
       loggedInProfile,
       hasWallet,
       hasProfile,
@@ -60,7 +64,7 @@ export function useAuth() {
       signInProvider,
       account,
       setCredentials,
-      setUserProfile,
+      setUserAccount,
       loggedInProfile,
       hasWallet,
       hasProfile,

@@ -1,7 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { FirebaseAuthTypes } from '@react-native-firebase/auth'
-
-export type User = FirebaseAuthTypes.User
 
 export type OverlayState = {
   showOverlay: boolean

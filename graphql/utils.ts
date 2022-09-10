@@ -15,10 +15,12 @@ import type {
 export async function verifyHandle(handle: string) {
   if (handle && handle.length < 3) return
 
-  return client.request<
+  const data = await client.request<
     QueryReturnType<'isHandleUnique'>,
     QueryArgsType<'isHandleUnique'>
   >(VALIDATE_HANDLE_QUERY, { handle })
+
+  return data.isHandleUnique
 }
 
 // Create wallet requires token to set headers as user just logged in and the app wide header is not available yet
