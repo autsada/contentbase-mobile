@@ -1,4 +1,5 @@
-import { Text } from 'react-native'
+import { useState } from 'react'
+import { Text, StyleSheet } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
 import SafeAreaContainer from '../components/shared/SafeAreaContainer'
@@ -7,25 +8,51 @@ import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
 import { useCreateProfileModal } from '../store/hooks/useCreateProfileModal'
+import { useListenToAddress } from '../hooks/useListenToAddress'
 import type { MainTabScreenProps } from '../navigation/MainTab'
+
+import RegularButton from '../components/shared/RegularButton'
+import { createWallet } from '../graphql/utils'
 
 interface Props extends MainTabScreenProps<any> {}
 
 export default function ProfilesScreen({ navigation }: Props) {
-  const { isAuthenticated } = useAuth()
+  const [processing, setProcessing] = useState(false)
+
+  const { isAuthenticated, hasWallet } = useAuth()
   const focused = useIsFocused()
   const { showProfileModal, title, closeCreateProfileModal } =
     useCreateProfileModal()
+  const { event } = useListenToAddress()
 
   // Auth modal will be poped up if user is not authenticated
   const authTitle = 'Sign in to view your profiles'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
 
+  async function handleCreateWallet() {
+    try {
+      setProcessing(true)
+      const result = await createWallet()
+      setProcessing(false)
+    } catch (error) {
+      setProcessing(false)
+    }
+  }
+
   return (
     <>
       <SafeAreaContainer>
         <Container>
-          <Text>Profile!!!</Text>
+          {!hasWallet && (
+            <RegularButton
+              title='Create Wallet'
+              containerStyle={styles.button}
+              disabled={processing}
+              withSpinner={true}
+              loading={processing}
+              onPress={handleCreateWallet}
+            />
+          )}
         </Container>
       </SafeAreaContainer>
 
@@ -37,3 +64,11 @@ export default function ProfilesScreen({ navigation }: Props) {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    width: 200,
+    height: 50,
+    backgroundColor: 'yellow',
+  },
+})

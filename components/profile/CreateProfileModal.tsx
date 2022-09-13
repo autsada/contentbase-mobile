@@ -290,11 +290,12 @@ export default function CreateProfileModal({
     }
   }
 
-  const validateHandleDebounce = useCallback(_.debounce(validateHandle, 400), [
-    values.handle,
-  ])
+  const validateHandleDebounce = useCallback(
+    _.debounce(handleValidateHandle, 400),
+    [values.handle]
+  )
 
-  async function validateHandle(handle: string) {
+  async function handleValidateHandle(handle: string) {
     try {
       if (handle && handle.length < 3) return
 
@@ -336,6 +337,7 @@ export default function CreateProfileModal({
         )
       }
     } catch (error) {
+      console.log('error -->', error)
       setProcessing(false)
       Alert.alert(
         'Create Profile Failed',
