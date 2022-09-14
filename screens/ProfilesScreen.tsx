@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Text, StyleSheet } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
@@ -12,22 +12,28 @@ import { useListenToAddress } from '../hooks/useListenToAddress'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
 import RegularButton from '../components/shared/RegularButton'
-import { createWallet } from '../graphql/utils'
+import { createWallet, subscribeToAddressUpdated } from '../graphql'
 
 interface Props extends MainTabScreenProps<any> {}
 
 export default function ProfilesScreen({ navigation }: Props) {
   const [processing, setProcessing] = useState(false)
 
-  const { isAuthenticated, hasWallet } = useAuth()
+  const { isAuthenticated, hasWallet, account } = useAuth()
   const focused = useIsFocused()
+  const address = account && account.address
   const { showProfileModal, title, closeCreateProfileModal } =
     useCreateProfileModal()
-  const { event } = useListenToAddress()
 
   // Auth modal will be poped up if user is not authenticated
   const authTitle = 'Sign in to view your profiles'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
+
+  useEffect(() => {
+    if (address) {
+      subscribeToAddressUpdated(address)
+    }
+  }, [address])
 
   async function handleCreateWallet() {
     try {
@@ -53,6 +59,8 @@ export default function ProfilesScreen({ navigation }: Props) {
               onPress={handleCreateWallet}
             />
           )}
+
+          <Text>Profiles</Text>
         </Container>
       </SafeAreaContainer>
 

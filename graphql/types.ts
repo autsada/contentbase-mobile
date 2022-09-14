@@ -12,3 +12,12 @@ export type MutationReturnType<T extends keyof NexusGenFieldTypes['Mutation']> =
   }
 export type MutationArgsType<T extends keyof NexusGenArgTypes['Mutation']> =
   NexusGenArgTypes['Mutation'][T]
+
+export type SubscriptionReturnType<
+  T extends keyof NexusGenFieldTypes['Subscription']
+> = {
+  [k in T]: NexusGenFieldTypes['Subscription'][T]
+}
+export type SubscriptionArgsType<
+  T extends keyof NexusGenArgTypes['Subscription']
+> = NexusGenArgTypes['Subscription'][T]
