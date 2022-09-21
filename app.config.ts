@@ -1,10 +1,15 @@
 import 'dotenv/config'
 import { ConfigContext, ExpoConfig } from '@expo/config'
 
-let apiEndpoint = 'http://192.168.10.112:4000'
+let httpApiEndpoint = ''
+let wsApiEndpoint = ''
 
-if (process.env.APP_ENV === 'production') {
-  apiEndpoint = ''
+if (process.env.APP_ENV === 'production' || process.env.APP_ENV === 'staging') {
+  httpApiEndpoint = 'https://contentbase-server-qyh5hhru7q-uc.a.run.app'
+  wsApiEndpoint = 'wss://contentbase-server-qyh5hhru7q-uc.a.run.app'
+} else {
+  httpApiEndpoint = 'http://192.168.10.112:4000'
+  wsApiEndpoint = 'ws://192.168.10.112:4000'
 }
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
@@ -73,7 +78,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
   ],
   extra: {
-    apiEndpoint,
+    httpApiEndpoint,
+    wsApiEndpoint,
     eas: {
       projectId: '7c558b06-436f-42dc-911e-cbea12a74910',
     },

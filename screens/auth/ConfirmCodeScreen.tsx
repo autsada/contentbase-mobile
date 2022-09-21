@@ -58,6 +58,7 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
             navigation.goBack()
           }
         } catch (error) {
+          console.log('error -->', error)
           applyOverlay(false)
           Alert.alert(
             '',
@@ -117,9 +118,15 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
       <CustomKeyboardAvoidingView>
         <View style={styles.container}>
           {isAuthenticated ? (
-            <TextHeader5 style={styles.header}>
-              You are now logged in
-            </TextHeader5>
+            !hasWallet ? (
+              <TextHeader5 style={styles.header}>
+                Creating wallet...
+              </TextHeader5>
+            ) : (
+              <TextHeader5 style={styles.header}>
+                You are now logged in
+              </TextHeader5>
+            )
           ) : (
             <>
               <TextHeader5 style={styles.header}>

@@ -13,7 +13,7 @@ import MainDrawerContent from './drawerContent/MainDrawerContent'
 import AppStack from './AppStack'
 import { useAuth } from '../store/hooks/useAuth'
 import { accountsCollection, listenToDocUpdate } from '../firebase'
-import { client, wsClient } from '../graphql'
+import { httpClient, wsClient } from '../graphql'
 
 export type AppDrawerParamList = {
   AppStack: NavigatorScreenParams<AppStackParamList>
@@ -41,10 +41,13 @@ export default function Navigation() {
           })
 
           // Set header to the request client
-          if (client) client.setHeader('authorization', `Bearer ${token}`)
+          if (httpClient)
+            httpClient.setHeader('authorization', `Bearer ${token}`)
 
-          // Start ws client (for subscriptions)
-          if (wsClient) wsClient.startWsClient(token)
+          // Start ws client if it didn't already exist
+          if (wsClient) {
+            if (!wsClient.client) wsClient.startWsClient(token)
+          }
         } else {
           setCredentials({ user: null, token: null })
         }
@@ -54,7 +57,7 @@ export default function Navigation() {
     })
 
     return unsubscribe
-  }, [client, wsClient])
+  }, [httpClient, wsClient])
 
   // Listen to account doc in Firestore when user is authenticated (current user is available)
   useEffect(() => {

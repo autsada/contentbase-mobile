@@ -18,6 +18,7 @@ import { Provider } from 'react-redux'
 
 import MainNavigation from './navigation'
 import { store } from './store'
+import './graphql/client'
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync()

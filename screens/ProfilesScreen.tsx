@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { Text, StyleSheet, Alert } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
 import SafeAreaContainer from '../components/shared/SafeAreaContainer'
@@ -8,11 +8,9 @@ import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
 import { useCreateProfileModal } from '../store/hooks/useCreateProfileModal'
-import { useListenToAddress } from '../hooks/useListenToAddress'
-import type { MainTabScreenProps } from '../navigation/MainTab'
-
 import RegularButton from '../components/shared/RegularButton'
-import { createWallet, subscribeToAddressUpdated } from '../graphql'
+import { createWallet, addressActivitySubscription } from '../graphql'
+import type { MainTabScreenProps } from '../navigation/MainTab'
 
 interface Props extends MainTabScreenProps<any> {}
 
@@ -31,17 +29,19 @@ export default function ProfilesScreen({ navigation }: Props) {
 
   useEffect(() => {
     if (address) {
-      subscribeToAddressUpdated(address)
+      console.log('address -->', address)
+      addressActivitySubscription(address)
     }
   }, [address])
 
   async function handleCreateWallet() {
     try {
       setProcessing(true)
-      const result = await createWallet()
+      await createWallet()
       setProcessing(false)
     } catch (error) {
       setProcessing(false)
+      Alert.alert('Create wallet failed', '')
     }
   }
 

@@ -56,9 +56,7 @@ export default function DrawerHeader({ navigation }: Props) {
         }}
       >
         {!hasProfile ? (
-          <TextLight style={styles.handle}>
-            You are logged in, but don't have profile.
-          </TextLight>
+          <TextLight style={styles.handle}>You don't have profile.</TextLight>
         ) : loggedInProfile ? (
           <TextHeader5 style={styles.handle}>
             @{loggedInProfile.handle}

@@ -8,7 +8,7 @@ import { NexusGenObjects } from '../gentypes/typegen'
 
 export function getMainStackHeaderTitle(
   route: MainStackScreenProps<
-    'Bookmarks' | 'Following' | 'Posts' | 'Videos'
+    'Profiles' | 'Collections' | 'Bookmarks' | 'Likes'
   >['route']
 ) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Videos'

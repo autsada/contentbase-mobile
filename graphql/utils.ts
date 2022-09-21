@@ -1,12 +1,10 @@
-import { SubscribePayload } from 'graphql-ws'
-import { client } from './client'
-import { wsClient } from './wsClient'
-
+import { httpClient, wsClient } from './client'
 import {
   CREATE_WALLET_MUTATION,
   CREATE_PROFILE_NFT_MUTATION,
 } from './mutations'
 import { VALIDATE_HANDLE_QUERY } from './queries'
+import { ADDRESS_ACTIVITY_SUBSCRIPTION } from './subscriptions'
 import type {
   QueryReturnType,
   QueryArgsType,
@@ -19,7 +17,7 @@ import type {
 export async function verifyHandle(handle: string) {
   if (handle && handle.length < 3) return
 
-  const data = await client.request<
+  const data = await httpClient.request<
     QueryReturnType<'isHandleUnique'>,
     QueryArgsType<'isHandleUnique'>
   >(VALIDATE_HANDLE_QUERY, { handle })
@@ -29,7 +27,7 @@ export async function verifyHandle(handle: string) {
 
 // Create wallet requires token to set headers as user just logged in and the app wide header is not available yet
 export async function createWallet() {
-  return client.request<MutationReturnType<'createWallet'>>(
+  return httpClient.request<MutationReturnType<'createWallet'>>(
     CREATE_WALLET_MUTATION
   )
 }
@@ -41,7 +39,7 @@ export async function createProfileNft({
   handle: string
   imageURI: string
 }) {
-  return client.request<
+  return httpClient.request<
     MutationReturnType<'createProfileNft'>,
     MutationArgsType<'createProfileNft'>
   >(CREATE_PROFILE_NFT_MUTATION, {
@@ -49,43 +47,15 @@ export async function createProfileNft({
   })
 }
 
-export async function execute<T, U extends Record<string, unknown>>(
-  payload: SubscribePayload & { variables: U }
-) {
-  if (!wsClient || !wsClient.client) return
-
-  return new Promise<T>((resolve, reject) => {
-    let result: T
-    wsClient.client.subscribe<T>(payload, {
-      next: (data) => (result = data as any),
-      error: reject,
-      complete: () => resolve(result),
-    })
-  })
-}
-
-export async function subscribeToAddressUpdated(address: string) {
-  console.log('called -->')
+export async function addressActivitySubscription(address: string) {
   try {
-    if (!address) return
+    if (!address || !wsClient) return
 
-    const result = await execute<
+    const result = await wsClient.execute<
       SubscriptionReturnType<'addressUpdated'>,
       SubscriptionArgsType<'addressUpdated'>
     >({
-      query: `subscription Subscription($input: AddressSubscriptionInput!) {
-      addressUpdated(input: $input) {
-        event {
-          fromAddress
-          toAddress
-          value
-          rawContract {
-            rawValue
-            decimal
-          }
-        }
-      }
-     }`,
+      query: ADDRESS_ACTIVITY_SUBSCRIPTION,
       variables: { input: { address } },
     })
 

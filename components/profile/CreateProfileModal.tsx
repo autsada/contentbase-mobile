@@ -291,7 +291,7 @@ export default function CreateProfileModal({
   }
 
   const validateHandleDebounce = useCallback(
-    _.debounce(handleValidateHandle, 400),
+    _.debounce(handleValidateHandle, 200),
     [values.handle]
   )
 
@@ -325,19 +325,18 @@ export default function CreateProfileModal({
         await createProfileNft({ handle: values.handle, imageURI: '' })
 
         setProcessing(false)
+        handleCloseModal()
         Alert.alert(
           'Profile Created',
           'Your profile has been successfully created.',
           [
             {
               text: 'CLOSE',
-              onPress: handleCloseModal,
             },
           ]
         )
       }
     } catch (error) {
-      console.log('error -->', error)
       setProcessing(false)
       Alert.alert(
         'Create Profile Failed',

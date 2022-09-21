@@ -1,20 +1,18 @@
 import { Client, createClient } from 'graphql-ws'
 
 class WsClient {
-  public client: Client | null
+  public client: Client | undefined
 
-  constructor() {
-    this.client = null
-  }
+  constructor() {}
 
   public startWsClient(token: string) {
     const client = createClient({
-      url: 'ws://172.20.10.2:4000/graphql',
+      url: `ws://localhost:4000/graphql`,
+      // url: `ws://contentbase-server-qyh5hhru7q-uc.a.run.app/graphql`,
       connectionParams: {
         authorization: `Bearer ${token}`,
       },
     })
-
     this.client = client
   }
 }
