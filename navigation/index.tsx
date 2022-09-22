@@ -16,7 +16,7 @@ import {
   listenToDocUpdate,
   updateDocById,
 } from '../firebase'
-import { httpClient, getBalance } from '../graphql'
+import { httpClient, getBalance, getMyProfiles } from '../graphql'
 import type { AppStackParamList } from './AppStack'
 import type { NexusGenObjects } from '../gentypes/typegen'
 
@@ -36,7 +36,7 @@ export default function Navigation() {
   const { user, setUserAccount, setCredentials, account } = useAuth()
   const userId = user && user.uid
   const address = account && account.address
-  const { updateBalance } = useAddressInfo()
+  const { updateBalance, updateProfiles } = useAddressInfo()
 
   // Listen to user's auth state
   useEffect(() => {
@@ -79,10 +79,11 @@ export default function Navigation() {
     return unsubscribe
   }, [userId])
 
-  // Fetch address's balance for the first time
+  // Fetch address's balance and profiles for the first time
   useEffect(() => {
     if (!address) return
     queryBalance(address)
+    queryMyProfiles()
   }, [address])
 
   // Listen to activities collection when user is authenticated
@@ -99,24 +100,36 @@ export default function Navigation() {
     return unsubcribe
   }, [userId])
 
-  // Fetch address's balance when activity occurred
+  // Fetch address's balance and profiles when activity occurred
   useEffect(() => {
     if (!address || !activity) return
 
     // Perform fetch only if the activity is not acknowledged yet and when the type is "external" | "internal"
     if (!activity.isAcknowledged) {
-      if (activity.event === 'external' || activity.event === 'internal') {
+      if (
+        (activity.event === 'external' || activity.event === 'internal') &&
+        activity.value > 0
+      ) {
         queryBalance(address)
-
-        // Acknowledge the activity
-        updateDocById<Partial<NexusGenObjects['AddressActivity']>>({
-          collectionName: activitiesCollection,
-          docId: activity.id,
-          data: {
-            isAcknowledged: true,
-          },
-        })
       }
+
+      if (
+        (activity.event === 'external' ||
+          activity.event === 'internal' ||
+          activity.event === 'token') &&
+        activity.value === 0
+      ) {
+        queryMyProfiles()
+      }
+
+      // Acknowledge the activity
+      updateDocById<Partial<NexusGenObjects['AddressActivity']>>({
+        collectionName: activitiesCollection,
+        docId: activity.id,
+        data: {
+          isAcknowledged: true,
+        },
+      })
     }
   }, [address, activity])
 
@@ -131,6 +144,15 @@ export default function Navigation() {
     },
     [address]
   )
+
+  const queryMyProfiles = useCallback(async () => {
+    try {
+      const result = await getMyProfiles()
+      updateProfiles(result)
+    } catch (error) {
+      updateProfiles([])
+    }
+  }, [])
 
   return (
     <NavigationContainer>

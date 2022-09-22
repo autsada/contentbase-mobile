@@ -11,3 +11,16 @@ export const GET_BALANCE_QUERY = gql`
     getMyBalance(address: $address)
   }
 `
+
+export const GET_PROFILES_QUERY = gql`
+  query {
+    getMyProfiles {
+      handle
+      imageURI
+      isDefault
+      owner
+      profileId
+      uid
+    }
+  }
+`

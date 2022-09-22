@@ -26,8 +26,15 @@ const addressInfoSlice = createSlice({
       const { balance } = action.payload
       state.balance = balance
     },
+    setProfiles: (
+      state: AddressState,
+      action: PayloadAction<{ profiles: NexusGenObjects['Profile'][] }>
+    ) => {
+      const { profiles } = action.payload
+      state.profiles = profiles
+    },
   },
 })
 
-export const { setBalance } = addressInfoSlice.actions
+export const { setBalance, setProfiles } = addressInfoSlice.actions
 export default addressInfoSlice.reducer

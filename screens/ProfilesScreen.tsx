@@ -18,7 +18,7 @@ export default function ProfilesScreen({ navigation }: Props) {
   const [processing, setProcessing] = useState(false)
 
   const { isAuthenticated, hasWallet } = useAuth()
-  const { balance } = useAddressInfo()
+  const { balance, profiles } = useAddressInfo()
   const focused = useIsFocused()
   const { showProfileModal, title, closeCreateProfileModal } =
     useCreateProfileModal()
@@ -38,6 +38,7 @@ export default function ProfilesScreen({ navigation }: Props) {
     }
   }
 
+  console.log('profiles -->', profiles)
   return (
     <>
       <SafeAreaContainer>
