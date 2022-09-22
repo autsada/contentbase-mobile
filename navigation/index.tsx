@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   NavigationContainer,
   NavigatorScreenParams,
@@ -12,8 +12,12 @@ import type { NexusGenObjects } from '../gentypes/typegen'
 import MainDrawerContent from './drawerContent/MainDrawerContent'
 import AppStack from './AppStack'
 import { useAuth } from '../store/hooks/useAuth'
-import { accountsCollection, listenToDocUpdate } from '../firebase'
-import { httpClient, wsClient } from '../graphql'
+import {
+  accountsCollection,
+  listenToDocUpdate,
+  activitiesCollection,
+} from '../firebase'
+import { httpClient } from '../graphql'
 
 export type AppDrawerParamList = {
   AppStack: NavigatorScreenParams<AppStackParamList>
@@ -25,7 +29,9 @@ export type AppDrawerScreenProps<T extends keyof AppDrawerParamList> =
 const MainDrawer = createDrawerNavigator<AppDrawerParamList>()
 
 export default function Navigation() {
+  const [updateInfo, setUpdateInfo] = useState()
   const { user, setUserAccount, setCredentials } = useAuth()
+  const userId = user && user.uid
 
   // Listen to user's auth state
   useEffect(() => {
@@ -43,11 +49,6 @@ export default function Navigation() {
           // Set header to the request client
           if (httpClient)
             httpClient.setHeader('authorization', `Bearer ${token}`)
-
-          // Start ws client if it didn't already exist
-          if (wsClient) {
-            if (!wsClient.client) wsClient.startWsClient(token)
-          }
         } else {
           setCredentials({ user: null, token: null })
         }
@@ -57,21 +58,35 @@ export default function Navigation() {
     })
 
     return unsubscribe
-  }, [httpClient, wsClient])
+  }, [httpClient])
 
   // Listen to account doc in Firestore when user is authenticated (current user is available)
   useEffect(() => {
-    if (!user) return
+    if (!userId) return
 
     const unsubscribe = listenToDocUpdate<NexusGenObjects['Account'] | null>({
       collectionName: accountsCollection,
-      docId: user.uid,
+      docId: userId,
       setterFn: setUserAccount,
       initialState: null,
     })
 
     return unsubscribe
-  }, [user])
+  }, [userId])
+
+  // Listen to activities collection when user is authenticated
+  useEffect(() => {
+    if (!userId) return
+
+    const unsubcribe = listenToDocUpdate({
+      collectionName: activitiesCollection,
+      docId: userId,
+      setterFn: setUpdateInfo,
+      initialState: undefined,
+    })
+
+    return unsubcribe
+  }, [userId])
 
   return (
     <NavigationContainer>

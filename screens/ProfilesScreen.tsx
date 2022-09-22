@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Text, StyleSheet, Alert } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
@@ -9,7 +9,7 @@ import { useAuthModal } from '../hooks/useAuthModal'
 import { useAuth } from '../store/hooks/useAuth'
 import { useCreateProfileModal } from '../store/hooks/useCreateProfileModal'
 import RegularButton from '../components/shared/RegularButton'
-import { createWallet, addressActivitySubscription } from '../graphql'
+import { createWallet } from '../graphql'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
 interface Props extends MainTabScreenProps<any> {}
@@ -17,22 +17,14 @@ interface Props extends MainTabScreenProps<any> {}
 export default function ProfilesScreen({ navigation }: Props) {
   const [processing, setProcessing] = useState(false)
 
-  const { isAuthenticated, hasWallet, account } = useAuth()
+  const { isAuthenticated, hasWallet } = useAuth()
   const focused = useIsFocused()
-  const address = account && account.address
   const { showProfileModal, title, closeCreateProfileModal } =
     useCreateProfileModal()
 
   // Auth modal will be poped up if user is not authenticated
   const authTitle = 'Sign in to view your profiles'
   useAuthModal(isAuthenticated, navigation, focused, authTitle)
-
-  useEffect(() => {
-    if (address) {
-      console.log('address -->', address)
-      addressActivitySubscription(address)
-    }
-  }, [address])
 
   async function handleCreateWallet() {
     try {

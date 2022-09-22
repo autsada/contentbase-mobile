@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import io from 'socket.io-client'
 
-const socket = io('ws://172.20.10.2:4000')
+const socket = io('ws://172.20.10.2:4000', {
+  transports: ['websocket'],
+})
 
 export function useListenToAddress() {
   const [connected, setConnected] = useState(socket.connected)
@@ -27,5 +29,6 @@ export function useListenToAddress() {
     }
   }, [])
 
+  console.log('connected -->', connected)
   return { updatedInfo }
 }

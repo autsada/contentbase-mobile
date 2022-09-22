@@ -1,17 +1,14 @@
-import { httpClient, wsClient } from './client'
+import { httpClient } from './client'
 import {
   CREATE_WALLET_MUTATION,
   CREATE_PROFILE_NFT_MUTATION,
 } from './mutations'
 import { VALIDATE_HANDLE_QUERY } from './queries'
-import { ADDRESS_ACTIVITY_SUBSCRIPTION } from './subscriptions'
 import type {
   QueryReturnType,
   QueryArgsType,
   MutationReturnType,
   MutationArgsType,
-  SubscriptionArgsType,
-  SubscriptionReturnType,
 } from './types'
 
 export async function verifyHandle(handle: string) {
@@ -45,24 +42,4 @@ export async function createProfileNft({
   >(CREATE_PROFILE_NFT_MUTATION, {
     input: { handle, imageURI },
   })
-}
-
-export async function addressActivitySubscription(address: string) {
-  try {
-    if (!address || !wsClient) return
-
-    const result = await wsClient.execute<
-      SubscriptionReturnType<'addressUpdated'>,
-      SubscriptionArgsType<'addressUpdated'>
-    >({
-      query: ADDRESS_ACTIVITY_SUBSCRIPTION,
-      variables: { input: { address } },
-    })
-
-    console.log('result -->', result)
-
-    return result
-  } catch (error) {
-    console.log('error -->', error)
-  }
 }
