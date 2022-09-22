@@ -50,6 +50,7 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
     if (isAuthenticated && !hasWallet) {
       const createEthWallet = async () => {
         try {
+          applyOverlay(true)
           await createWallet()
           applyOverlay(false)
           // Go to the first screen of the stack once done
@@ -57,7 +58,6 @@ export default function ConfirmCodeScreen({ navigation }: Props) {
             navigation.goBack()
           }
         } catch (error) {
-          console.log('error -->', error)
           applyOverlay(false)
           Alert.alert(
             '',

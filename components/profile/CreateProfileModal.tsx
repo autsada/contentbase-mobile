@@ -340,7 +340,7 @@ export default function CreateProfileModal({
       setProcessing(false)
       Alert.alert(
         'Create Profile Failed',
-        'Please make sure you have some ethers in your wallet to pay gas fee (at least 0.0000000000003 ETH).',
+        'Reasons why creating profile failed - 1. This handle might be already taken. 2. You may have not enough ETH (the balance should be at least 0.0000000000003 ETH). 3. Network error.',
         [{ text: 'CLOSE' }]
       )
     }

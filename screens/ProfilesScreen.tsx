@@ -38,7 +38,6 @@ export default function ProfilesScreen({ navigation }: Props) {
     }
   }
 
-  console.log('profiles -->', profiles)
   return (
     <>
       <SafeAreaContainer>

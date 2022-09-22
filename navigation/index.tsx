@@ -33,9 +33,11 @@ export default function Navigation() {
   const [activity, setActivity] = useState<
     NexusGenObjects['AddressActivity'] | undefined
   >()
-  const { user, setUserAccount, setCredentials, account } = useAuth()
+  const { user, setUserAccount, setCredentials, account, signInProvider } =
+    useAuth()
   const userId = user && user.uid
   const address = account && account.address
+  const accountType = account && account.type
   const { updateBalance, updateProfiles } = useAddressInfo()
 
   // Listen to user's auth state
@@ -83,8 +85,14 @@ export default function Navigation() {
   useEffect(() => {
     if (!address) return
     queryBalance(address)
-    queryMyProfiles()
-  }, [address])
+
+    // Call backend to query profile for traditional accounts
+    if (signInProvider !== 'custom') {
+      queryMyProfiles()
+    } else {
+      // For wallet accounts, connect to the blockchain directly
+    }
+  }, [address, signInProvider])
 
   // Listen to activities collection when user is authenticated
   useEffect(() => {
@@ -100,26 +108,22 @@ export default function Navigation() {
     return unsubcribe
   }, [userId])
 
-  // Fetch address's balance and profiles when activity occurred
+  // Fetch address's balance when activity occurred
   useEffect(() => {
     if (!address || !activity) return
 
-    // Perform fetch only if the activity is not acknowledged yet and when the type is "external" | "internal"
+    // Perform fetch only if the activity is not acknowledged yet
     if (!activity.isAcknowledged) {
-      if (
-        (activity.event === 'external' || activity.event === 'internal') &&
-        activity.value > 0
-      ) {
-        queryBalance(address)
-      }
+      queryBalance(address)
 
-      if (
-        (activity.event === 'external' ||
-          activity.event === 'internal' ||
-          activity.event === 'token') &&
-        activity.value === 0
-      ) {
-        queryMyProfiles()
+      // If value = 0 means it's token activity
+      if (activity.value === 0) {
+        // For traditional accounts call backend api to query profiles
+        if (signInProvider !== 'custom') {
+          queryMyProfiles()
+        } else {
+          // For wallet accounts, connect to the blockchain directly
+        }
       }
 
       // Acknowledge the activity
@@ -131,8 +135,9 @@ export default function Navigation() {
         },
       })
     }
-  }, [address, activity])
+  }, [address, activity, signInProvider])
 
+  // Call backend api to query balance
   const queryBalance = useCallback(
     async (address: string) => {
       try {
@@ -145,6 +150,7 @@ export default function Navigation() {
     [address]
   )
 
+  // Call backend api to query profiles
   const queryMyProfiles = useCallback(async () => {
     try {
       const result = await getMyProfiles()
