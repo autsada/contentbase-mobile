@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   NavigationContainer,
   NavigatorScreenParams,
@@ -7,17 +7,18 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import type { DrawerScreenProps } from '@react-navigation/drawer'
 import auth from '@react-native-firebase/auth'
 
-import type { AppStackParamList } from './AppStack'
-import type { NexusGenObjects } from '../gentypes/typegen'
 import MainDrawerContent from './drawerContent/MainDrawerContent'
 import AppStack from './AppStack'
-import { useAuth } from '../store/hooks/useAuth'
+import { useAuth, useAddressInfo } from '../store/hooks'
 import {
   accountsCollection,
-  listenToDocUpdate,
   activitiesCollection,
+  listenToDocUpdate,
+  updateDocById,
 } from '../firebase'
-import { httpClient } from '../graphql'
+import { httpClient, getBalance } from '../graphql'
+import type { AppStackParamList } from './AppStack'
+import type { NexusGenObjects } from '../gentypes/typegen'
 
 export type AppDrawerParamList = {
   AppStack: NavigatorScreenParams<AppStackParamList>
@@ -29,9 +30,13 @@ export type AppDrawerScreenProps<T extends keyof AppDrawerParamList> =
 const MainDrawer = createDrawerNavigator<AppDrawerParamList>()
 
 export default function Navigation() {
-  const [updateInfo, setUpdateInfo] = useState()
-  const { user, setUserAccount, setCredentials } = useAuth()
+  const [activity, setActivity] = useState<
+    NexusGenObjects['AddressActivity'] | undefined
+  >()
+  const { user, setUserAccount, setCredentials, account } = useAuth()
   const userId = user && user.uid
+  const address = account && account.address
+  const { updateBalance } = useAddressInfo()
 
   // Listen to user's auth state
   useEffect(() => {
@@ -74,6 +79,12 @@ export default function Navigation() {
     return unsubscribe
   }, [userId])
 
+  // Fetch address's balance for the first time
+  useEffect(() => {
+    if (!address) return
+    queryBalance(address)
+  }, [address])
+
   // Listen to activities collection when user is authenticated
   useEffect(() => {
     if (!userId) return
@@ -81,12 +92,45 @@ export default function Navigation() {
     const unsubcribe = listenToDocUpdate({
       collectionName: activitiesCollection,
       docId: userId,
-      setterFn: setUpdateInfo,
+      setterFn: setActivity,
       initialState: undefined,
     })
 
     return unsubcribe
   }, [userId])
+
+  // Fetch address's balance when activity occurred
+  useEffect(() => {
+    if (!address || !activity) return
+
+    // Perform fetch only if the activity is not acknowledged yet and when the type is "external" | "internal"
+    if (!activity.isAcknowledged) {
+      if (activity.event === 'external' || activity.event === 'internal') {
+        queryBalance(address)
+
+        // Acknowledge the activity
+        updateDocById<Partial<NexusGenObjects['AddressActivity']>>({
+          collectionName: activitiesCollection,
+          docId: activity.id,
+          data: {
+            isAcknowledged: true,
+          },
+        })
+      }
+    }
+  }, [address, activity])
+
+  const queryBalance = useCallback(
+    async (address: string) => {
+      try {
+        const result = await getBalance(address)
+        updateBalance(result)
+      } catch (error) {
+        console.log('fetch balance error: ', error)
+      }
+    },
+    [address]
+  )
 
   return (
     <NavigationContainer>

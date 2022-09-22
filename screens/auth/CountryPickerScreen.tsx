@@ -6,7 +6,7 @@ import CountryPicker, {
   CountryCode,
 } from 'react-native-country-picker-modal'
 
-import { useAuth } from '../../store/hooks/useAuth'
+import { useAuth } from '../../store/hooks'
 import { useAuthStackContext } from './auth-stack-context'
 import type { AuthStackScreenProps } from './AuthStack'
 

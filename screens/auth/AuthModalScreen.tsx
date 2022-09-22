@@ -13,7 +13,7 @@ import CloseButton from '../../components/shared/CloseButton'
 import RegularButton from '../../components/shared/RegularButton'
 import { TextHeader3, TextLight } from '../../components/shared/Texts'
 import type { AuthStackScreenProps } from './AuthStack'
-import { useAuth } from '../../store/hooks/useAuth'
+import { useAuth } from '../../store/hooks'
 import { theme } from '../../styles/theme'
 import { generateBoxShadow, getBottomBarColor } from '../../utils/helpers'
 

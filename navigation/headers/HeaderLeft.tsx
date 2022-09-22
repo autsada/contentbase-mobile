@@ -4,7 +4,7 @@ import { useDrawerStatus } from '@react-navigation/drawer'
 
 import CloseIcon from '../../components/icons/CloseIcon'
 import { theme } from '../../styles/theme'
-import { useAuth } from '../../store/hooks/useAuth'
+import { useAuth } from '../../store/hooks'
 import type { AppDrawerScreenProps } from '..'
 import type { MainTabScreenProps } from '../MainTab'
 

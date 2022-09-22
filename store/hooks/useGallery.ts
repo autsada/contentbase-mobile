@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useAppSelector } from '.'
+import { useAppSelector } from '..'
 
 export function useGallery() {
   // const {

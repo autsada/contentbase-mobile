@@ -20,9 +20,8 @@ import {
   TextBaseItalic,
 } from '../../components/shared/Texts'
 import RegularButton from '../../components/shared/RegularButton'
-import { useAuth } from '../../store/hooks/useAuth'
+import { useAuth, useAppOverlay } from '../../store/hooks'
 import { useAuthStackContext } from './auth-stack-context'
-import { useAppOverlay } from '../../store/hooks/useOverlay'
 import { theme } from '../../styles/theme'
 
 interface Props extends AuthStackScreenProps<'Phone'> {}

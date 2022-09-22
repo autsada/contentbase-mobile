@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 import SafeAreaContainer from '../components/shared/SafeAreaContainer'
 import Container from '../components/shared/Container'
 import { useAuthModal } from '../hooks/useAuthModal'
-import { useAuth } from '../store/hooks/useAuth'
+import { useAuth } from '../store/hooks'
 import type { MainTabScreenProps } from '../navigation/MainTab'
 
 interface Props extends MainTabScreenProps<'Upload'> {}

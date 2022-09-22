@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useAppSelector, useAppDispatch } from '.'
+import { useAppSelector, useAppDispatch } from '..'
 import { setProfileModal } from '../features/profile-modal/profileModalSlice'
 
 export function useCreateProfileModal() {

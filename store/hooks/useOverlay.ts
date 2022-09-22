@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useAppSelector, useAppDispatch } from '.'
+import { useAppSelector, useAppDispatch } from '..'
 import { setOverlay } from '../features/app-overlay/overlaySlice'
 
 export function useAppOverlay() {

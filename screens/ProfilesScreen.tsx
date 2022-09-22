@@ -6,7 +6,7 @@ import SafeAreaContainer from '../components/shared/SafeAreaContainer'
 import Container from '../components/shared/Container'
 import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
-import { useAuth } from '../store/hooks/useAuth'
+import { useAuth, useAddressInfo } from '../store/hooks'
 import { useCreateProfileModal } from '../store/hooks/useCreateProfileModal'
 import RegularButton from '../components/shared/RegularButton'
 import { createWallet } from '../graphql'
@@ -18,6 +18,7 @@ export default function ProfilesScreen({ navigation }: Props) {
   const [processing, setProcessing] = useState(false)
 
   const { isAuthenticated, hasWallet } = useAuth()
+  const { balance } = useAddressInfo()
   const focused = useIsFocused()
   const { showProfileModal, title, closeCreateProfileModal } =
     useCreateProfileModal()
@@ -52,7 +53,7 @@ export default function ProfilesScreen({ navigation }: Props) {
             />
           )}
 
-          <Text>Profiles</Text>
+          <Text>Balance: {balance}</Text>
         </Container>
       </SafeAreaContainer>
 

@@ -4,7 +4,7 @@ import type { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/types
 import CloseIcon from '../../components/icons/CloseIcon'
 import { TextLight, TextHeader5 } from '../../components/shared/Texts'
 import RegularButton from '../../components/shared/RegularButton'
-import { useAuth } from '../../store/hooks/useAuth'
+import { useAuth } from '../../store/hooks'
 import { useCreateProfileModal } from '../../store/hooks/useCreateProfileModal'
 import { theme } from './../../styles/theme'
 import { Ionicons } from '@expo/vector-icons'

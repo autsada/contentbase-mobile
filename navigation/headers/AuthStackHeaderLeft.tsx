@@ -2,7 +2,6 @@ import { StyleSheet, Pressable } from 'react-native'
 
 import type { AuthStackScreenProps } from '../../screens/auth/AuthStack'
 import BackButton from '../../components/shared/BackButton'
-import { useAuthStackContext } from '../../screens/auth/auth-stack-context'
 
 interface Props
   extends AuthStackScreenProps<

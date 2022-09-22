@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useAppSelector, useAppDispatch } from '.'
+import { useAppSelector, useAppDispatch } from '..'
 import { setAuth, setAccount } from '../features/auth/authSlice'
 import type { AuthState } from '../features/auth/authSlice'
 

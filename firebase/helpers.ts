@@ -55,3 +55,20 @@ export function snapshotToDoc<T extends Record<string, any>>(
 
   return doc
 }
+
+export async function updateDocById<T extends Record<string, any>>({
+  collectionName,
+  docId,
+  data,
+}: Pick<Args<T>, 'collectionName' | 'docId' | 'data'>) {
+  return firestore()
+    .collection(collectionName)
+    .doc(docId)
+    .set(
+      {
+        ...data,
+        updatedAt: new Date(),
+      },
+      { merge: true }
+    )
+}

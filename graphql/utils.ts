@@ -3,7 +3,7 @@ import {
   CREATE_WALLET_MUTATION,
   CREATE_PROFILE_NFT_MUTATION,
 } from './mutations'
-import { VALIDATE_HANDLE_QUERY } from './queries'
+import { VALIDATE_HANDLE_QUERY, GET_BALANCE_QUERY } from './queries'
 import type {
   QueryReturnType,
   QueryArgsType,
@@ -27,6 +27,17 @@ export async function createWallet() {
   return httpClient.request<MutationReturnType<'createWallet'>>(
     CREATE_WALLET_MUTATION
   )
+}
+
+export async function getBalance(address: string) {
+  if (!address) return
+
+  const data = await httpClient.request<
+    QueryReturnType<'getMyBalance'>,
+    QueryArgsType<'getMyBalance'>
+  >(GET_BALANCE_QUERY, { address })
+
+  return data.getMyBalance
 }
 
 export async function createProfileNft({
