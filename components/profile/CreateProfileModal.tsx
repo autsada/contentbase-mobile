@@ -141,6 +141,10 @@ export default function CreateProfileModal({
     }
     // Reset validate handle state
     if (typeof isHandleUnique === 'boolean') setIsHandleUnique(undefined)
+    if (showUploadActions) {
+      closeUploadActions()
+    }
+    if (selectedImage) setSelectedImage(undefined)
     closeModal()
   }
 
@@ -322,19 +326,20 @@ export default function CreateProfileModal({
         if (selectedImage) {
         }
 
-        await createProfileNft({ handle: values.handle, imageURI: '' })
+        console.log('image -->', selectedImage)
+        // await createProfileNft({ handle: values.handle, imageURI: '' })
 
-        setProcessing(false)
-        handleCloseModal()
-        Alert.alert(
-          'Profile Created',
-          'Your profile has been successfully created.',
-          [
-            {
-              text: 'CLOSE',
-            },
-          ]
-        )
+        // setProcessing(false)
+        // handleCloseModal()
+        // Alert.alert(
+        //   'Profile Created',
+        //   'Your profile has been successfully created.',
+        //   [
+        //     {
+        //       text: 'CLOSE',
+        //     },
+        //   ]
+        // )
       }
     } catch (error) {
       setProcessing(false)
@@ -346,175 +351,202 @@ export default function CreateProfileModal({
     }
   }
 
+  console.log('show -->', showUploadActions)
   return (
     <Modal
       visible={visible}
+      style={{ flex: 1 }}
       presentationStyle='overFullScreen'
       transparent={true}
     >
-      <SafeAreaContainer containerStyle={styles.container}>
-        <CustomKeyboardAvoidingView
-          containerStyle={styles.content}
-          contentContainerStyle={{ width: '100%' }}
-          keyboardVerticalOffset={0}
+      <View style={{ flex: 1, backgroundColor: theme.colors.transparentBlack }}>
+        <Modal
+          visible={visible}
+          presentationStyle='overFullScreen'
+          transparent={true}
+          animationType='slide'
         >
-          <View style={styles.form}>
-            <Pressable
-              hitSlop={20}
-              style={{
-                alignSelf: 'flex-end',
-                marginBottom: 20,
-              }}
-              onPress={handleCloseModal}
+          <SafeAreaContainer containerStyle={styles.container}>
+            <CustomKeyboardAvoidingView
+              containerStyle={styles.content}
+              contentContainerStyle={{ width: '100%' }}
+              keyboardVerticalOffset={0}
             >
-              <CloseButton />
-            </Pressable>
-
-            <TextHeader5 style={styles.title}>{title}</TextHeader5>
-            <View style={styles.inputContainer}>
-              <TextLight style={styles.label}>
-                What do you like to be called? e.g. "Abby"
-              </TextLight>
-              <View style={{ justifyContent: 'center' }}>
-                <TextInput
-                  placeholder='Your handle*'
-                  style={styles.input}
-                  // autoFocus={true}
-                  onChangeText={handleChange('handle')}
-                  onBlur={handleBlur('handle')}
-                  value={values.handle}
-                />
-                {!errors.handle && typeof isHandleUnique === 'boolean' && (
-                  <View style={styles.verify}>
-                    {isHandleUnique ? <CheckIcon /> : <CloseErrorIcon />}
-                  </View>
-                )}
-              </View>
-              <ErrorMessage
-                message={
-                  touched.handle && errors.handle
-                    ? errors.handle
-                    : typeof isHandleUnique === 'boolean' && !isHandleUnique
-                    ? 'This handle is taken'
-                    : ''
-                }
-                style={{ bottom: -15, left: 5 }}
-              />
-            </View>
-            <View style={[styles.inputContainer]}>
-              <TextLight style={styles.label}>
-                Profile Image (optional)
-              </TextLight>
-              <TextLightItalic
-                style={[
-                  styles.label,
-                  {
-                    color: theme.colors.lightGray,
-                    fontSize: theme.fontSize.sm,
-                  },
-                ]}
-              >
-                You can add/update it later.
-              </TextLightItalic>
-              <Pressable
-                style={styles.uploadContainer}
-                onPress={
-                  showUploadActions ? closeUploadActions : openUploadActions
-                }
-              >
-                <View style={styles.upload}>
-                  {!!selectedImage ? (
-                    <>
-                      <Image
-                        source={{
-                          uri: selectedImage.path,
-                          width: selectedImage.width,
-                          height: selectedImage.height,
-                        }}
-                        style={{ width: '100%', height: '100%' }}
-                      />
-                      <EditIcon
-                        style={{ position: 'absolute', bottom: 10, right: 20 }}
-                      />
-                    </>
-                  ) : (
-                    <CameraIcon size={34} style={{ position: 'absolute' }} />
-                  )}
-                </View>
-
-                {/* Upload actions modal */}
-                <Animated.View
-                  style={[
-                    styles.uploadActions,
-                    {
-                      opacity: fadeAnim,
-                      top: !selectedImage ? -70 : -120,
-                    },
-                    uploadActionShadow,
-                  ]}
+              <View style={styles.form}>
+                <Pressable
+                  hitSlop={20}
+                  style={{
+                    alignSelf: 'flex-end',
+                    marginBottom: 20,
+                  }}
+                  onPress={handleCloseModal}
                 >
-                  <Pressable
-                    style={styles.uploadAction}
-                    onPress={onPickProfileImage}
+                  <CloseButton />
+                </Pressable>
+
+                <TextHeader5 style={styles.title}>{title}</TextHeader5>
+                <View style={styles.inputContainer}>
+                  <TextLight style={styles.label}>
+                    What do you like to be called? e.g. "Abby"
+                  </TextLight>
+                  <View style={{ justifyContent: 'center' }}>
+                    <TextInput
+                      placeholder='Your handle*'
+                      style={styles.input}
+                      // autoFocus={true}
+                      onChangeText={handleChange('handle')}
+                      onBlur={handleBlur('handle')}
+                      value={values.handle}
+                    />
+                    {!errors.handle && typeof isHandleUnique === 'boolean' && (
+                      <View style={styles.verify}>
+                        {isHandleUnique ? <CheckIcon /> : <CloseErrorIcon />}
+                      </View>
+                    )}
+                  </View>
+                  <ErrorMessage
+                    message={
+                      touched.handle && errors.handle
+                        ? errors.handle
+                        : typeof isHandleUnique === 'boolean' && !isHandleUnique
+                        ? 'This handle is taken'
+                        : ''
+                    }
+                    style={{ bottom: -15, left: 5 }}
+                  />
+                </View>
+                <View style={[styles.inputContainer]}>
+                  <TextLight style={styles.label}>
+                    Profile Image (optional)
+                  </TextLight>
+                  <TextLightItalic
+                    style={[
+                      styles.label,
+                      {
+                        color: theme.colors.lightGray,
+                        fontSize: theme.fontSize.sm,
+                      },
+                    ]}
                   >
-                    <View style={styles.uploadIcon}>
-                      <ImageIcon size={30} />
-                    </View>
-                    <TextBase style={{ marginLeft: 5 }}>Select Photo</TextBase>
-                  </Pressable>
+                    You can add/update it later.
+                  </TextLightItalic>
                   <Pressable
-                    style={styles.uploadAction}
-                    onPress={onTakeProfileImage}
+                    style={styles.uploadContainer}
+                    onPress={
+                      showUploadActions ? closeUploadActions : openUploadActions
+                    }
                   >
-                    <View style={styles.uploadIcon}>
-                      <CameraIcon size={20} />
+                    <View style={styles.upload}>
+                      {!!selectedImage ? (
+                        <>
+                          <Image
+                            source={{
+                              uri: selectedImage.path,
+                              width: selectedImage.width,
+                              height: selectedImage.height,
+                            }}
+                            style={{ width: '100%', height: '100%' }}
+                          />
+                          <EditIcon
+                            style={{
+                              position: 'absolute',
+                              bottom: 10,
+                              right: 20,
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <CameraIcon
+                          size={34}
+                          style={{ position: 'absolute' }}
+                        />
+                      )}
                     </View>
-                    <TextBase style={{ marginLeft: 5 }}>Take Photo</TextBase>
+
+                    {/* Upload actions modal */}
+                    {showUploadActions && (
+                      <Animated.View
+                        style={[
+                          styles.uploadActions,
+                          {
+                            opacity: fadeAnim,
+                            top: !selectedImage ? -70 : -120,
+                          },
+                          uploadActionShadow,
+                        ]}
+                      >
+                        <Pressable
+                          style={styles.uploadAction}
+                          onPress={onPickProfileImage}
+                        >
+                          <View style={styles.uploadIcon}>
+                            <ImageIcon size={30} />
+                          </View>
+                          <TextBase style={{ marginLeft: 5 }}>
+                            Select Photo
+                          </TextBase>
+                        </Pressable>
+                        <Pressable
+                          style={[
+                            styles.uploadAction,
+                            { borderBottomWidth: !selectedImage ? 0 : 1 },
+                          ]}
+                          onPress={onTakeProfileImage}
+                        >
+                          <View style={styles.uploadIcon}>
+                            <CameraIcon size={20} />
+                          </View>
+                          <TextBase style={{ marginLeft: 5 }}>
+                            Take Photo
+                          </TextBase>
+                        </Pressable>
+                        {!!selectedImage && (
+                          <Pressable
+                            style={[
+                              styles.uploadAction,
+                              {
+                                justifyContent: 'center',
+                                height: 40,
+                                borderBottomWidth: 0,
+                              },
+                            ]}
+                            onPress={trashSelectedImage}
+                          >
+                            <TrashIcon size={30} />
+                          </Pressable>
+                        )}
+                      </Animated.View>
+                    )}
                   </Pressable>
-                  {!!selectedImage && (
-                    <Pressable
-                      style={[
-                        styles.uploadAction,
-                        {
-                          justifyContent: 'center',
-                          height: 40,
-                          borderBottomWidth: 0,
-                        },
-                      ]}
-                      onPress={trashSelectedImage}
-                    >
-                      <TrashIcon size={30} />
-                    </Pressable>
-                  )}
-                </Animated.View>
-              </Pressable>
-            </View>
-            <RegularButton
-              title='CREATE PROFILE'
-              containerStyle={styles.button}
-              titleStyle={styles.buttonText}
-              disabled={!isHandleUnique || !!errors.handle || processing}
-              loading={processing}
-              withSpinner={true}
-              spinnerColor={theme.colors.lightBlue}
-              onPress={handleSubmit}
+                </View>
+                <RegularButton
+                  title='CREATE PROFILE'
+                  containerStyle={styles.button}
+                  titleStyle={styles.buttonText}
+                  disabled={!isHandleUnique || !!errors.handle || processing}
+                  loading={processing}
+                  withSpinner={true}
+                  spinnerColor={theme.colors.lightBlue}
+                  onPress={handleSubmit}
+                />
+              </View>
+            </CustomKeyboardAvoidingView>
+          </SafeAreaContainer>
+          {processing && (
+            <Overlay
+              withInfo={true}
+              info='Creating profile, please DO NOT close the app.'
             />
-          </View>
-        </CustomKeyboardAvoidingView>
-      </SafeAreaContainer>
-      {processing && (
-        <Overlay
-          withInfo={true}
-          info='Creating profile, please DO NOT close the app.'
-        />
-      )}
+          )}
+        </Modal>
+      </View>
     </Modal>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.transparentBlack,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
   },
   content: {
@@ -577,7 +609,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.backgroundGray,
     width: '60%',
     borderRadius: theme.radius.lg,
-    overflow: 'hidden',
   },
   uploadAction: {
     flexDirection: 'row',
