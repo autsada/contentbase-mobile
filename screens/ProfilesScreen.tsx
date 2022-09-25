@@ -6,8 +6,12 @@ import SafeAreaContainer from '../components/shared/SafeAreaContainer'
 import Container from '../components/shared/Container'
 import CreateProfileModal from '../components/profile/CreateProfileModal'
 import { useAuthModal } from '../hooks/useAuthModal'
-import { useAuth, useAddressInfo } from '../store/hooks'
-import { useCreateProfileModal } from '../store/hooks/useCreateProfileModal'
+import {
+  useAuth,
+  useAddressInfo,
+  useCreateProfileModal,
+  useAppOverlay,
+} from '../store/hooks'
 import RegularButton from '../components/shared/RegularButton'
 import { createWallet } from '../graphql'
 import type { MainTabScreenProps } from '../navigation/MainTab'
@@ -20,8 +24,13 @@ export default function ProfilesScreen({ navigation }: Props) {
   const { isAuthenticated, hasWallet } = useAuth()
   const { balance, profiles } = useAddressInfo()
   const focused = useIsFocused()
-  const { showProfileModal, title, closeCreateProfileModal } =
-    useCreateProfileModal()
+  const {
+    showProfileModal,
+    title,
+    closeCreateProfileModal,
+    openCreateProfileModal,
+  } = useCreateProfileModal()
+  const { applyAppBackdrop } = useAppOverlay()
 
   // Auth modal will be poped up if user is not authenticated
   const authTitle = 'Sign in to view your profiles'
@@ -38,6 +47,12 @@ export default function ProfilesScreen({ navigation }: Props) {
     }
   }
 
+  function handleOpenCreateProfileModal() {
+    applyAppBackdrop(true)
+    openCreateProfileModal('Create New Profile')
+  }
+
+  console.log('profiles -->', profiles)
   return (
     <>
       <SafeAreaContainer>
@@ -54,6 +69,11 @@ export default function ProfilesScreen({ navigation }: Props) {
           )}
 
           <Text>Balance: {balance}</Text>
+          <RegularButton
+            title='Create Profile'
+            containerStyle={styles.button}
+            onPress={handleOpenCreateProfileModal}
+          />
         </Container>
       </SafeAreaContainer>
 

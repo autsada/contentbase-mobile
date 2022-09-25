@@ -37,7 +37,6 @@ export default function Navigation() {
     useAuth()
   const userId = user && user.uid
   const address = account && account.address
-  const accountType = account && account.type
   const { updateBalance, updateProfiles } = useAddressInfo()
 
   // Listen to user's auth state
@@ -46,7 +45,7 @@ export default function Navigation() {
       try {
         if (user) {
           const claims = await user.getIdTokenResult()
-          const token = await user.getIdToken()
+          const token = await user.getIdToken(true)
           setCredentials({
             user,
             token,
@@ -109,6 +108,7 @@ export default function Navigation() {
   }, [userId])
 
   // Fetch address's balance when activity occurred
+  // For profiles, will listen to an event emitted from the blockchain before perform querying
   useEffect(() => {
     if (!address || !activity) return
 
@@ -116,8 +116,8 @@ export default function Navigation() {
     if (!activity.isAcknowledged) {
       queryBalance(address)
 
-      // If value = 0 means it's token activity
-      if (activity.value === 0) {
+      // If event is "token", query profiles
+      if (activity.event === 'token') {
         // For traditional accounts call backend api to query profiles
         if (signInProvider !== 'custom') {
           queryMyProfiles()

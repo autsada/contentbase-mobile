@@ -10,7 +10,7 @@ export function useCreateProfileModal() {
 
   const dispatch = useAppDispatch()
 
-  function openCreateProfileModal(title?: string) {
+  function openCreateProfileModal(title: string = '') {
     dispatch(setProfileModal({ show: true, title }))
   }
 
