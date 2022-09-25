@@ -15,12 +15,13 @@ export const GET_BALANCE_QUERY = gql`
 export const GET_PROFILES_QUERY = gql`
   query {
     getMyProfiles {
-      handle
-      imageURI
-      isDefault
-      owner
       profileId
       uid
+      owner
+      handle
+      imageURI1
+      imageURI2
+      isDefault
     }
   }
 `

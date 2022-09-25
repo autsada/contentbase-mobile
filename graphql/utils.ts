@@ -54,15 +54,17 @@ export async function getMyProfiles() {
 
 export async function createProfileNft({
   handle,
-  imageURI = '',
+  imageURI1 = '',
+  imageURI2 = '',
 }: {
   handle: string
-  imageURI: string
+  imageURI1?: string
+  imageURI2?: string
 }) {
   return httpClient.request<
     MutationReturnType<'createProfileNft'>,
     MutationArgsType<'createProfileNft'>
   >(CREATE_PROFILE_NFT_MUTATION, {
-    input: { handle, imageURI },
+    input: { handle, imageURI1, imageURI2 },
   })
 }
