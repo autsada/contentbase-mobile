@@ -1,10 +1,16 @@
 import { useMemo } from 'react'
 
 import { useAppSelector, useAppDispatch } from '..'
-import { setOverlay } from '../features/app-overlay/overlaySlice'
+import {
+  setOverlay,
+  setAppBackdrop,
+} from '../features/app-overlay/overlaySlice'
 
 export function useAppOverlay() {
   const isOverlayOpened = useAppSelector((state) => state.overlay.showOverlay)
+  const isAppBackdropOpened = useAppSelector(
+    (state) => state.overlay.showAppBackdrop
+  )
 
   const dispatch = useAppDispatch()
 
@@ -12,8 +18,17 @@ export function useAppOverlay() {
     dispatch(setOverlay({ show }))
   }
 
+  function applyAppBackdrop(show: boolean) {
+    dispatch(setAppBackdrop({ show }))
+  }
+
   return useMemo(
-    () => ({ isOverlayOpened, applyOverlay }),
-    [isOverlayOpened, applyOverlay]
+    () => ({
+      isOverlayOpened,
+      applyOverlay,
+      isAppBackdropOpened,
+      applyAppBackdrop,
+    }),
+    [isOverlayOpened, applyOverlay, isAppBackdropOpened, applyAppBackdrop]
   )
 }

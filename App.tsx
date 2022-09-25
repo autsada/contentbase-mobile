@@ -17,11 +17,21 @@ import * as SplashScreen from 'expo-splash-screen'
 import { Provider } from 'react-redux'
 
 import MainNavigation from './navigation'
+import Backdrop from './components/shared/Backdrop'
 import { store } from './store'
+import { useAppOverlay } from './store/hooks'
 import './graphql/client'
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync()
+
+function AppOverlay() {
+  const { isAppBackdropOpened } = useAppOverlay()
+
+  if (!isAppBackdropOpened) return null
+
+  return <Backdrop />
+}
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -53,6 +63,7 @@ export default function App() {
         <MainNavigation />
         <StatusBar style='auto' />
       </SafeAreaProvider>
+      <AppOverlay />
     </Provider>
   )
 }

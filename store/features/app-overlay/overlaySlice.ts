@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type OverlayState = {
   showOverlay: boolean
+  showAppBackdrop: boolean
 }
 
 const initialState: OverlayState = {
   showOverlay: false,
+  showAppBackdrop: false,
 }
 
 const overlaySlice = createSlice({
@@ -19,8 +21,15 @@ const overlaySlice = createSlice({
       const { show } = action.payload
       state.showOverlay = show
     },
+    setAppBackdrop: (
+      state: OverlayState,
+      action: PayloadAction<{ show: boolean }>
+    ) => {
+      const { show } = action.payload
+      state.showAppBackdrop = show
+    },
   },
 })
 
-export const { setOverlay } = overlaySlice.actions
+export const { setOverlay, setAppBackdrop } = overlaySlice.actions
 export default overlaySlice.reducer
