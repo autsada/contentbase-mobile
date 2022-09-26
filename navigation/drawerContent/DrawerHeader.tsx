@@ -39,8 +39,12 @@ export default function DrawerHeader({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      {loggedInProfile && loggedInProfile.imageURI ? (
-        <Image source={{ uri: loggedInProfile.imageURI }} style={styles.logo} />
+      {/* Use image url from cloud storage - imageURL2 */}
+      {loggedInProfile && loggedInProfile.imageURI2 ? (
+        <Image
+          source={{ uri: loggedInProfile.imageURI2 }}
+          style={styles.avatar}
+        />
       ) : (
         <Ionicons
           name='person-circle-sharp'
@@ -58,7 +62,12 @@ export default function DrawerHeader({ navigation }: Props) {
         {!hasProfile ? (
           <TextLight style={styles.handle}>You don't have profile.</TextLight>
         ) : loggedInProfile ? (
-          <TextHeader5 style={styles.handle}>
+          <TextHeader5
+            style={[
+              styles.handle,
+              { fontSize: theme.fontSize.base, color: theme.colors.black },
+            ]}
+          >
             @{loggedInProfile.handle}
           </TextHeader5>
         ) : (
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.veryLightGray,
   },
-  logo: {
+  avatar: {
     width: 80,
     height: 80,
     borderRadius: 999,

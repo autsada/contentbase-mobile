@@ -1,24 +1,19 @@
 import { useMemo } from 'react'
 
 import { useAppSelector, useAppDispatch } from '..'
-import { setAuth, setAccount } from '../features/auth/authSlice'
+import {
+  setAuth,
+  setAccount,
+  setLoggedInProfile,
+} from '../features/auth/authSlice'
 import type { AuthState } from '../features/auth/authSlice'
 
 export function useAuth() {
-  const user = useAppSelector((state) => state.auth.user)
+  const { user, token, account, signInProvider, loggedInProfile } =
+    useAppSelector((state) => state.auth)
   const isAuthenticated = !!user
-  const token = useAppSelector((state) => state.auth.token)
-  const signInProvider = useAppSelector((state) => state.auth.signInProvider)
-  const account = useAppSelector((state) => state.auth.account)
   const hasProfile = account && account.profiles && account.profiles.length > 0
   const hasWallet = account && !!account.address
-  const loggedInProfile =
-    account && account.profiles && account.profiles.length > 0
-      ? account.profiles.find(
-          (profile) =>
-            profile.profileId === account.loggedInProfile || profile.isDefault
-        ) || account.profiles[0]
-      : null
 
   const dispatch = useAppDispatch()
 
@@ -40,6 +35,10 @@ export function useAuth() {
     dispatch(setAccount({ account }))
   }
 
+  function updateLoggedInProfile(profile: AuthState['loggedInProfile']) {
+    dispatch(setLoggedInProfile({ loggedInProfile: profile }))
+  }
+
   return useMemo(
     () => ({
       user,
@@ -52,6 +51,7 @@ export function useAuth() {
       loggedInProfile,
       hasWallet,
       hasProfile,
+      updateLoggedInProfile,
     }),
     [
       user,
@@ -64,6 +64,7 @@ export function useAuth() {
       loggedInProfile,
       hasWallet,
       hasProfile,
+      updateLoggedInProfile,
     ]
   )
 }

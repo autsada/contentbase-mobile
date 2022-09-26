@@ -33,11 +33,25 @@ export default function Navigation() {
   const [activity, setActivity] = useState<
     NexusGenObjects['AddressActivity'] | undefined
   >()
-  const { user, setUserAccount, setCredentials, account, signInProvider } =
-    useAuth()
+  const {
+    user,
+    setUserAccount,
+    setCredentials,
+    account,
+    signInProvider,
+    updateLoggedInProfile,
+  } = useAuth()
   const userId = user && user.uid
-  const address = account && account.address
-  const { updateBalance, updateProfiles } = useAddressInfo()
+  const address = !!account && account.address
+  const loggedInProfileId = !!account && account.loggedInProfile
+  const { updateBalance, updateProfiles, profiles } = useAddressInfo()
+
+  // Find the logged in profile
+  const loggedInProfile = loggedInProfileId
+    ? profiles.find((profile) => profile.profileId === loggedInProfileId)
+    : profiles.find((profile) => profile.isDefault)
+    ? profiles.find((profile) => profile.isDefault)
+    : profiles[0]
 
   // Listen to user's auth state
   useEffect(() => {
@@ -136,6 +150,10 @@ export default function Navigation() {
       })
     }
   }, [address, activity, signInProvider])
+
+  useEffect(() => {
+    updateLoggedInProfile(loggedInProfile)
+  }, [loggedInProfile?.profileId])
 
   // Call backend api to query balance
   const queryBalance = useCallback(

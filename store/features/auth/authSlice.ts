@@ -11,6 +11,7 @@ export type AuthState = {
   loading: boolean
   account: NexusGenObjects['Account'] | null
   signInProvider?: 'phone' | 'password' | 'google.com' | 'custom'
+  loggedInProfile: NexusGenObjects['Profile'] | null
 }
 
 const initialState: AuthState = {
@@ -18,6 +19,7 @@ const initialState: AuthState = {
   token: null,
   loading: true,
   account: null,
+  loggedInProfile: null,
 }
 
 const authSlice = createSlice({
@@ -41,8 +43,14 @@ const authSlice = createSlice({
     ) => {
       state.account = action.payload.account
     },
+    setLoggedInProfile: (
+      state: AuthState,
+      action: PayloadAction<Pick<AuthState, 'loggedInProfile'>>
+    ) => {
+      state.loggedInProfile = action.payload.loggedInProfile
+    },
   },
 })
 
-export const { setAuth, setAccount } = authSlice.actions
+export const { setAuth, setAccount, setLoggedInProfile } = authSlice.actions
 export default authSlice.reducer

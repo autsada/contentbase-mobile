@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, Platform, Image } from 'react-native'
+import { StyleSheet, Pressable, Platform, Image, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useDrawerStatus } from '@react-navigation/drawer'
 
@@ -7,6 +7,7 @@ import { theme } from '../../styles/theme'
 import { useAuth } from '../../store/hooks'
 import type { AppDrawerScreenProps } from '..'
 import type { MainTabScreenProps } from '../MainTab'
+import BackButton from './../../components/shared/BackButton'
 
 interface Props {
   navigation: MainTabScreenProps<
@@ -42,19 +43,25 @@ export default function HeaderLeft({ navigation }: Props) {
         style={styles.container}
         onPress={() => drawerNavigator.toggleDrawer()}
       >
-        {status === 'closed' ? (
-          loggedInProfile && loggedInProfile.imageURI ? (
-            <Image source={{ uri: loggedInProfile.imageURI }} />
-          ) : (
-            <Ionicons
-              name='person-circle-sharp'
-              size={40}
-              color={theme.colors.black}
-            />
-          )
-        ) : OS === 'ios' ? (
-          <CloseIcon size={35} />
-        ) : null}
+        {/* Use image url from cloud storage - imageURL2 */}
+        {loggedInProfile && loggedInProfile.imageURI2 ? (
+          <Image
+            source={{ uri: loggedInProfile.imageURI2 }}
+            style={styles.avatar}
+          />
+        ) : (
+          <Ionicons
+            name='person-circle-sharp'
+            size={40}
+            color={theme.colors.black}
+          />
+        )}
+
+        {status !== 'closed' && OS === 'ios' && (
+          <View style={styles.close}>
+            <CloseIcon size={35} />
+          </View>
+        )}
       </Pressable>
     )
 
@@ -72,6 +79,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 70,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 999,
+    resizeMode: 'contain',
+  },
+  close: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   logo: {
     width: 40,
