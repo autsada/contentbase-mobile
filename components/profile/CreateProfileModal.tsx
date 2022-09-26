@@ -44,6 +44,7 @@ import { createProfileNft, verifyHandle } from '../../graphql'
 import { takeProfileImage, pickProfileImage } from '../../utils/media'
 import { generateBoxShadow } from '../../utils/helpers'
 import { theme } from '../../styles/theme'
+import type { NexusGenObjects } from '../../gentypes/typegen'
 
 interface Props {
   visible: boolean
@@ -316,10 +317,14 @@ export default function CreateProfileModal({
       // Start the process
       setProcessing(true)
 
-      // If user uploads profile image, send the image to backend to save to web3.storage and get back a cid
+      // If user uploads profile image, send the image to backend to save to web3.storage and cloud storage and get back URLs that point to the image
+      let ipfsImageURL = ''
+      let storageImageURL = ''
+
       if (selectedImage) {
+        // console.log('image -->', selectedImage)
         const response = await FileSystem.uploadAsync(
-          `${httpApiEndpoint}/api/uploads`,
+          `${httpApiEndpoint}/api/uploads/profile`,
           selectedImage.sourceURL || selectedImage.path,
           {
             headers: {
@@ -335,28 +340,33 @@ export default function CreateProfileModal({
           }
         )
 
-        console.log('res -->', response.body)
+        const { imageGateWayURL, storageURL } = JSON.parse(
+          response.body
+        ) as NexusGenObjects['UploadReturnType']
+
+        ipfsImageURL = imageGateWayURL
+        storageImageURL = storageURL
       }
 
       if (signInProvider === 'custom') {
         // User signs in with wallet
       } else {
-        // // User signs in with traditional methods (phone, email, google)
-        // await createProfileNft({
-        //   handle: values.handle,
-        //   imageURI1: '',
-        //   imageURI2: '',
-        // })
-        // handleCloseModal()
-        // Alert.alert(
-        //   'Profile Created',
-        //   'Your profile has been successfully created.',
-        //   [
-        //     {
-        //       text: 'CLOSE',
-        //     },
-        //   ]
-        // )
+        // User signs in with traditional methods (phone, email, google)
+        await createProfileNft({
+          handle: values.handle,
+          imageURI1: ipfsImageURL,
+          imageURI2: storageImageURL,
+        })
+        handleCloseModal()
+        Alert.alert(
+          'Profile Created',
+          'Your profile has been successfully created.',
+          [
+            {
+              text: 'CLOSE',
+            },
+          ]
+        )
       }
 
       setProcessing(false)
