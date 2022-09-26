@@ -19,8 +19,8 @@ export const GET_PROFILES_QUERY = gql`
       uid
       owner
       handle
-      imageURI1
-      imageURI2
+      tokenURI
+      imageURI
       isDefault
     }
   }

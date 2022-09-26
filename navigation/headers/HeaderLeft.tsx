@@ -43,10 +43,10 @@ export default function HeaderLeft({ navigation }: Props) {
         style={styles.container}
         onPress={() => drawerNavigator.toggleDrawer()}
       >
-        {/* Use image url from cloud storage - imageURL2 */}
-        {loggedInProfile && loggedInProfile.imageURI2 ? (
+        {/* Use image url from cloud storage - imageURL */}
+        {loggedInProfile && loggedInProfile.imageURI ? (
           <Image
-            source={{ uri: loggedInProfile.imageURI2 }}
+            source={{ uri: loggedInProfile.imageURI }}
             style={styles.avatar}
           />
         ) : (
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 999,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   close: {
     position: 'absolute',

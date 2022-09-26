@@ -10,6 +10,7 @@ import type { NexusGenObjects } from '../../gentypes/typegen'
 export function useAddressInfo() {
   const balance = useAppSelector((state) => state.address.balance)
   const profiles = useAppSelector((state) => state.address.profiles)
+  const hasProfile = profiles.length > 0
 
   const dispatch = useAppDispatch()
 
@@ -25,9 +26,10 @@ export function useAddressInfo() {
     () => ({
       balance,
       profiles,
+      hasProfile,
       updateBalance,
       updateProfiles,
     }),
-    [balance, profiles, updateBalance, updateProfiles]
+    [balance, profiles, hasProfile, updateBalance, updateProfiles]
   )
 }

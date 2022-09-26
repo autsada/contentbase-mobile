@@ -354,8 +354,8 @@ export default function CreateProfileModal({
         // User signs in with traditional methods (phone, email, google)
         await createProfileNft({
           handle: values.handle,
-          imageURI1: ipfsImageURL,
-          imageURI2: storageImageURL,
+          tokenURI: ipfsImageURL,
+          imageURI: storageImageURL,
         })
         handleCloseModal()
         Alert.alert(

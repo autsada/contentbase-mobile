@@ -12,7 +12,6 @@ export function useAuth() {
   const { user, token, account, signInProvider, loggedInProfile } =
     useAppSelector((state) => state.auth)
   const isAuthenticated = !!user
-  const hasProfile = account && account.profiles && account.profiles.length > 0
   const hasWallet = account && !!account.address
 
   const dispatch = useAppDispatch()
@@ -50,7 +49,6 @@ export function useAuth() {
       setUserAccount,
       loggedInProfile,
       hasWallet,
-      hasProfile,
       updateLoggedInProfile,
     }),
     [
@@ -63,7 +61,6 @@ export function useAuth() {
       setUserAccount,
       loggedInProfile,
       hasWallet,
-      hasProfile,
       updateLoggedInProfile,
     ]
   )

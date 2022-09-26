@@ -5,6 +5,8 @@ import CloseIcon from '../../components/icons/CloseIcon'
 import { TextLight, TextHeader5 } from '../../components/shared/Texts'
 import RegularButton from '../../components/shared/RegularButton'
 import { useAuth } from '../../store/hooks'
+import { useAddressInfo } from '../../store/hooks'
+import { useAppOverlay } from '../../store/hooks'
 import { useCreateProfileModal } from '../../store/hooks/useCreateProfileModal'
 import { theme } from './../../styles/theme'
 import { Ionicons } from '@expo/vector-icons'
@@ -16,11 +18,15 @@ interface Props {
 const OS = Platform.OS
 
 export default function DrawerHeader({ navigation }: Props) {
-  const { isAuthenticated, hasProfile, loggedInProfile } = useAuth()
+  const { isAuthenticated, loggedInProfile } = useAuth()
+  const { hasProfile } = useAddressInfo()
   const { openCreateProfileModal } = useCreateProfileModal()
+  const { applyAppBackdrop } = useAppOverlay()
 
   function onRequestToCreateProfile() {
     if (!navigation) return
+
+    applyAppBackdrop(true)
     // set profile modal state to show with the title
     openCreateProfileModal('Create My First Profile')
     // Navigate to profile screen
@@ -39,10 +45,10 @@ export default function DrawerHeader({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      {/* Use image url from cloud storage - imageURL2 */}
-      {loggedInProfile && loggedInProfile.imageURI2 ? (
+      {/* Use image url from cloud storage - imageURL */}
+      {loggedInProfile && loggedInProfile.imageURI ? (
         <Image
-          source={{ uri: loggedInProfile.imageURI2 }}
+          source={{ uri: loggedInProfile.imageURI }}
           style={styles.avatar}
         />
       ) : (
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 999,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   handle: {
     fontSize: theme.fontSize.sm,
