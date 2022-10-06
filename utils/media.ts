@@ -35,7 +35,8 @@ export function takeProfileImage() {
     height: 300,
     cropping: true,
     cropperCircleOverlay: true,
-    useFrontCamera: true,
+    freeStyleCropEnabled: true,
+    // useFrontCamera: true,
     // compressVideoPreset: 'MediumQuality',
   })
 }

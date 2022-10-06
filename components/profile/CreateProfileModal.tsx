@@ -74,7 +74,7 @@ export default function CreateProfileModal({
   const [isHandleUnique, setIsHandleUnique] = useState<boolean>()
   const [processing, setProcessing] = useState(false)
 
-  const { user, signInProvider, token } = useAuth()
+  const { user, signInProvider, token, account } = useAuth()
   const { applyAppBackdrop } = useAppOverlay()
   const fadeAnim = useRef(new Animated.Value(0)).current
   const { openSettings } = useLinking()
@@ -318,11 +318,11 @@ export default function CreateProfileModal({
       setProcessing(true)
 
       // If user uploads profile image, send the image to backend to save to web3.storage and cloud storage and get back URLs that point to the image
-      let ipfsImageURL = ''
+      let profileNFT = ''
       let storageImageURL = ''
 
       if (selectedImage) {
-        // console.log('image -->', selectedImage)
+        // console.log('selected image -->', selectedImage)
         const response = await FileSystem.uploadAsync(
           `${httpApiEndpoint}/api/uploads/profile`,
           selectedImage.sourceURL || selectedImage.path,
@@ -334,39 +334,47 @@ export default function CreateProfileModal({
             fieldName: 'avatar',
             parameters: {
               userId: user.uid,
-              fileName: selectedImage.filename || handle,
               handle,
+              address: account.address,
+              fileName:
+                selectedImage.filename ||
+                (selectedImage.path &&
+                  selectedImage.path.split('/')[
+                    selectedImage.path.split('/').length - 1
+                  ]) ||
+                handle,
+              mime: selectedImage.mime,
             },
           }
         )
 
-        const { imageGateWayURL, storageURL } = JSON.parse(
+        const { tokenURI } = JSON.parse(
           response.body
         ) as NexusGenObjects['UploadReturnType']
 
-        ipfsImageURL = imageGateWayURL
-        storageImageURL = storageURL
+        console.log('token URI -->', tokenURI)
+        profileNFT = tokenURI
       }
 
       if (signInProvider === 'custom') {
         // User signs in with wallet
       } else {
-        // User signs in with traditional methods (phone, email, google)
-        await createProfileNft({
-          handle: values.handle,
-          tokenURI: ipfsImageURL,
-          imageURI: storageImageURL,
-        })
-        handleCloseModal()
-        Alert.alert(
-          'Profile Created',
-          'Your profile has been successfully created.',
-          [
-            {
-              text: 'CLOSE',
-            },
-          ]
-        )
+        // // User signs in with traditional methods (phone, email, google)
+        // await createProfileNft({
+        //   handle: values.handle,
+        //   tokenURI: profileNFT,
+        //   imageURI: storageImageURL,
+        // })
+        // handleCloseModal()
+        // Alert.alert(
+        //   'Profile Created',
+        //   'Your profile has been successfully created.',
+        //   [
+        //     {
+        //       text: 'CLOSE',
+        //     },
+        //   ]
+        // )
       }
 
       setProcessing(false)

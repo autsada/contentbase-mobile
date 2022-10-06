@@ -16,11 +16,9 @@ export const GET_PROFILES_QUERY = gql`
   query {
     getMyProfiles {
       profileId
-      uid
       owner
       handle
       tokenURI
-      imageURI
       isDefault
     }
   }
